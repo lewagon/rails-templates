@@ -1,3 +1,4 @@
+run "rm Gemfile"
 file 'Gemfile', <<-RUBY
 source 'https://rubygems.org'
 ruby '2.2.3'
@@ -29,9 +30,6 @@ group :production do
 end
 RUBY
 
-run "bundle install"
-run "bundle exec figaro install"
-
 file 'Procfile', <<-YAML
 web: bundle exec puma -C config/puma.rb
 YAML
@@ -57,11 +55,11 @@ RUBY
 generate(:controller, 'pages', 'home', '--no-helper', '--no-assets')
 route "root to: 'pages#home'"
 
-generate('simple_form:install', '--bootstrap')
 run "rm -rf app/assets/stylesheets"
 run "curl -L https://github.com/lewagon/stylesheets/archive/master.zip > stylesheets.zip"
 run "unzip stylesheets.zip -d app/assets && rm stylesheets.zip && mv app/assets/rails-stylesheets-master app/assets/stylesheets"
 
+run 'rm app/assets/javascripts/application.js'
 file 'app/assets/javascripts/application.js', <<-JS
 //= require jquery
 //= require jquery_ujs
@@ -69,6 +67,7 @@ file 'app/assets/javascripts/application.js', <<-JS
 //= require_tree .
 JS
 
+run 'rm app/views/layouts/application.html.erb'
 file 'app/views/layouts/application.html.erb', <<-HTML
 <!DOCTYPE html>
 <html>
@@ -87,7 +86,9 @@ file 'app/views/layouts/application.html.erb', <<-HTML
 HTML
 
 after_bundle do
+  run "bundle exec figaro install"
+  generate('simple_form:install', '--bootstrap')
   git :init
   git add: "."
-  git commit: %Q{ -m 'Initial commit' }
+  git commit: %Q{ -m 'Initial commit with minmal template from https://github.com/lewagon/rails-templates' }
 end

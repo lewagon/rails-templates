@@ -5,9 +5,12 @@ using [Rails Templates](http://guides.rubyonrails.org/rails_application_template
 
 ## Minimal
 
+Get a minimal rails app ready to be deployed on Heroku with Bootstrap, Simple form and
+debugging gems.
+
 ```bash
-$ cd ~/code/$GITHUB_USERNAME
-$ rails new \
-  -T -d postgresql -f -m https://raw.githubusercontent.com/lewagon/rails-templates/master/minimal.rb \
-  $RAILS_APP_NAME
+rails new \
+  -T --database postgresql \
+  -m https://raw.githubusercontent.com/lewagon/rails-templates/master/minimal.rb \
+  CHANGE_THIS_TO_YOUR_RAILS_APP_NAME
 ```
