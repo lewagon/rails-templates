@@ -31,7 +31,28 @@ RUBY
 
 run "bundle install"
 run "bundle exec figaro install"
-run "curl -L https://gist.github.com/ssaunier/24bc1c4db955c19e3289/raw/install.sh | bash"
+
+file 'Procfile', <<-YAML
+web: bundle exec puma -C config/puma.rb
+YAML
+
+file 'config/puma.rb', <<-RUBY
+workers Integer(ENV['WEB_CONCURRENCY'] || 2)
+threads_count = Integer(ENV['MAX_THREADS'] || 5)
+threads threads_count, threads_count
+
+preload_app!
+
+rackup      DefaultRackup
+port        ENV['PORT']     || 3000
+environment ENV['RACK_ENV'] || 'development'
+
+on_worker_boot do
+  # Worker specific setup for Rails 4.1+
+  # See: https://devcenter.heroku.com/articles/deploying-rails-applications-with-the-puma-web-server#on-worker-boot
+  ActiveRecord::Base.establish_connection
+end
+RUBY
 
 generate(:controller, 'pages', 'home', '--no-helper', '--no-assets')
 route "root to: 'pages#home'"
