@@ -7,6 +7,7 @@ gem 'rails', '4.2.3'
 gem 'pg'
 gem 'figaro'
 gem 'jbuilder', '~> 2.0'
+gem 'devise'
 
 gem 'sass-rails', '~> 5.0'
 gem 'jquery-rails'
@@ -79,11 +80,30 @@ file 'app/views/layouts/application.html.erb', <<-HTML
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   </head>
   <body>
+    <%= render 'shared/navbar' %>
+    <%= render 'shared/flashes' %>
     <%= yield %>
     <%= javascript_include_tag 'application' %>
   </body>
 </html>
 HTML
+
+file 'app/views/shared/_flashes.html.erb', <<-HTML
+<% if notice %>
+  <div class="alert alert-info alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <%= notice %>
+  </div>
+<% end %>
+<% if alert %>
+  <div class="alert alert-warning alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <%= alert %>
+  </div>
+<% end %>
+HTML
+
+run "curl -L https://raw.githubusercontent.com/lewagon/awesome-navbars/master/templates/_navbar_wagon.html.erb > app/views/shared/_navbar.html.erb"
 
 run "README.rdoc"
 file 'README.md', <<-MARKDOWN
@@ -93,8 +113,13 @@ MARKDOWN
 after_bundle do
   run "bundle exec figaro install"
   generate('simple_form:install', '--bootstrap')
+  generate('devise:install')
+  generate('devise', 'User')
+  generate('devise:views')
+  environment 'config.action_mailer.default_url_options = { host: "http://localhost:3000" }', env: 'development'
+  environment 'config.action_mailer.default_url_options = { host: "http://TODO_PUT_YOUR_DOMAIN_HERE" }', env: 'production'
   rake 'db:drop db:create db:migrate'
   git :init
   git add: "."
-  git commit: %Q{ -m 'Initial commit with minmal template from https://github.com/lewagon/rails-templates' }
+  git commit: %Q{ -m 'Initial commit with devise template from https://github.com/lewagon/rails-templates' }
 end
