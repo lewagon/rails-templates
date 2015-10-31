@@ -3,7 +3,7 @@ file 'Gemfile', <<-RUBY
 source 'https://rubygems.org'
 ruby '2.2.3'
 
-gem 'rails', '4.2.3'
+gem 'rails', '4.2.4'
 gem 'pg'
 gem 'figaro'
 gem 'jbuilder', '~> 2.0'
