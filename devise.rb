@@ -3,7 +3,7 @@ file 'Gemfile', <<-RUBY
 source 'https://rubygems.org'
 ruby '2.2.3'
 
-gem 'rails', '4.2.4'
+gem 'rails', '4.2.5'
 gem 'pg'
 gem 'figaro'
 gem 'jbuilder', '~> 2.0'
@@ -112,6 +112,16 @@ Rails app generated with [lewagon/rails-templates](https://github.com/lewagon/ra
 MARKDOWN
 
 after_bundle do
+  run "rm .gitignore"
+  file '.gitignore', <<-TXT
+.bundle
+log/*.log
+tmp/**/*
+tmp/*
+*.swp
+.DS_Store
+public/assets
+TXT
   run "bundle exec figaro install"
   generate('simple_form:install', '--bootstrap')
   generate('devise:install')
