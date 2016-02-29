@@ -26,6 +26,8 @@ group :development, :test do
   gem 'pry-byebug'
   gem 'pry-rails'
   gem 'spring'
+  #{Rails.version >= "5" ? "gem 'listen', '~> 3.0.5'" : nil}
+  #{Rails.version >= "5" ? "gem 'spring-watcher-listen', '~> 2.0.0'" : nil}
 end
 
 group :production do
