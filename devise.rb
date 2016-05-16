@@ -1,7 +1,8 @@
+run "pgrep spring | xargs kill -9"
 run "rm Gemfile"
 file 'Gemfile', <<-RUBY
 source 'https://rubygems.org'
-ruby '2.3.0'
+ruby '#{RUBY_VERSION}'
 
 gem 'rails', '#{Rails.version}'
 gem 'puma'
@@ -35,6 +36,8 @@ group :production do
 end
 RUBY
 
+file ".ruby-version", RUBY_VERSION
+
 file 'Procfile', <<-YAML
 web: bundle exec puma -C config/puma.rb
 YAML
@@ -62,22 +65,6 @@ file 'app/assets/javascripts/application.js', <<-JS
 //= require bootstrap-sprockets
 //= require_tree .
 JS
-
-if Rails.version >= "5"
-  run "rm app/assets/javascripts/cable.coffee"
-  file "app/assets/javascripts/cable.js", <<-JS
-// Action Cable provides the framework to deal with WebSockets in Rails.
-// You can generate new channels where WebSocket features live using the rails generate channel command.
-//
-// Turn on the cable connection by removing the comments after the require statements (and ensure it's also on in config/routes.rb).
-//
-//= require action_cable
-//= require_self
-//= require_tree ./channels
-// this.App || (this.App = {});
-// App.cable = ActionCable.createConsumer();
-  JS
-end
 
 gsub_file('config/environments/development.rb', /config\.assets\.debug.*/, 'config.assets.debug = false')
 
@@ -126,6 +113,8 @@ MARKDOWN
 file 'README.md', markdown_file_content, force: true
 
 after_bundle do
+  rake 'db:drop db:create db:migrate'
+  generate('simple_form:install', '--bootstrap')
   generate(:controller, 'pages', 'home', '--no-helper', '--no-assets', '--skip-routes')
   route "root to: 'pages#home'"
 
@@ -139,14 +128,13 @@ tmp/*
 .DS_Store
 public/assets
 TXT
-  run "bundle exec figaro install"
-  generate('simple_form:install', '--bootstrap')
+  run "bin/figaro install"
   generate('devise:install')
   generate('devise', 'User')
+  rake 'db:migrate'
   generate('devise:views')
   environment 'config.action_mailer.default_url_options = { host: "http://localhost:3000" }', env: 'development'
   environment 'config.action_mailer.default_url_options = { host: "http://TODO_PUT_YOUR_DOMAIN_HERE" }', env: 'production'
-  rake 'db:drop db:create db:migrate'
   git :init
   git add: "."
   git commit: %Q{ -m 'Initial commit with devise template from https://github.com/lewagon/rails-templates' }
