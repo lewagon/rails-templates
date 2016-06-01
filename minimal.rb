@@ -72,11 +72,12 @@ file 'app/views/layouts/application.html.erb', <<-HTML
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>TODO</title>
     <%= csrf_meta_tags %>
     #{Rails.version >= "5" ? "<%= action_cable_meta_tag %>" : nil}
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <%= stylesheet_link_tag    'application', media: 'all' %>
   </head>
   <body>
