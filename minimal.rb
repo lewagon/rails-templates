@@ -16,7 +16,7 @@ gem 'jquery-rails'
 gem 'uglifier'
 gem 'bootstrap-sass'
 gem 'font-awesome-sass'
-gem 'simple_form'#{Rails.version >= "5" ? ", github: 'plataformatec/simple_form'" : nil}
+gem 'simple_form'
 gem 'autoprefixer-rails'
 
 group :development, :test do
