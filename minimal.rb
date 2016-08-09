@@ -30,9 +30,7 @@ group :development, :test do
   #{Rails.version >= "5" ? "gem 'spring-watcher-listen', '~> 2.0.0'" : nil}
 end
 
-group :production do
-  gem 'rails_12factor'
-end
+#{Rails.version < "5" ? "gem 'rails_12factor', group: :production" : nil}
 RUBY
 
 file ".ruby-version", RUBY_VERSION
@@ -89,7 +87,7 @@ HTML
 
 run "rm README.rdoc"
 markdown_file_content = <<-MARKDOWN
-Rails app generated with [lewagon/rails-templates](https://github.com/lewagon/rails-templates)
+Rails app generated with [lewagon/rails-templates](https://github.com/lewagon/rails-templates), created by the [Le Wagon coding bootcamp](https://www.lewagon.com) team.
 MARKDOWN
 file 'README.md', markdown_file_content, force: true
 
