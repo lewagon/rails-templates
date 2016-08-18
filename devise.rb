@@ -103,6 +103,7 @@ file 'app/views/shared/_flashes.html.erb', <<-HTML
 HTML
 
 run "curl -L https://raw.githubusercontent.com/lewagon/awesome-navbars/master/templates/_navbar_wagon.html.erb > app/views/shared/_navbar.html.erb"
+run "curl -L https://raw.githubusercontent.com/lewagon/design/master/logos/png/logo_red_circle.png > app/assets/images/logo.png"
 
 run "rm README.rdoc"
 markdown_file_content = <<-MARKDOWN
@@ -113,9 +114,8 @@ file 'README.md', markdown_file_content, force: true
 after_bundle do
   rake 'db:drop db:create db:migrate'
   generate('simple_form:install', '--bootstrap')
-  generate(:controller, 'pages', 'home', '--no-helper', '--no-assets', '--skip-routes')
+  generate(:controller, 'pages', 'home', '--no-assets', '--skip-routes')
   route "root to: 'pages#home'"
-
   run "rm .gitignore"
   file '.gitignore', <<-TXT
 .bundle
@@ -129,8 +129,24 @@ TXT
   run "bin/figaro install"
   generate('devise:install')
   generate('devise', 'User')
+  run 'rm app/controllers/application_controller.rb'
+  file 'app/controllers/application_controller.rb', <<-RUBY
+class ApplicationController < ActionController::Base
+  protect_from_forgery with: :exception
+  before_action :authenticate_user!
+end
+RUBY
   rake 'db:migrate'
   generate('devise:views')
+  run 'rm app/controllers/pages_controller.rb'
+  file 'app/controllers/pages_controller.rb', <<-RUBY
+class PagesController < ApplicationController
+  skip_before_action :authenticate_user!, only: [ :home ]
+
+  def home
+  end
+end
+RUBY
   environment 'config.action_mailer.default_url_options = { host: "http://localhost:3000" }', env: 'development'
   environment 'config.action_mailer.default_url_options = { host: "http://TODO_PUT_YOUR_DOMAIN_HERE" }', env: 'production'
   git :init
