@@ -133,6 +133,22 @@ TXT
   generate('devise:views')
   environment 'config.action_mailer.default_url_options = { host: "http://localhost:3000" }', env: 'development'
   environment 'config.action_mailer.default_url_options = { host: "http://TODO_PUT_YOUR_DOMAIN_HERE" }', env: 'production'
+  run "rm app/controllers/application_controller.rb"
+  file 'app/controllers/application_controller.rb', <<-RUBY
+  class ApplicationController < ActionController::Base
+    protect_from_forgery with: :exception
+    before_action :authenticate_user!
+  end
+  RUBY
+  run "rm app/controllers/pages_controller.rb"
+  file 'app/controllers/pages_controller.rb', <<-RUBY
+  class PagesController < ApplicationController
+    skip_before_action :authenticate_user!, only: [ :home ]
+    
+    def home
+    end
+  end
+  RUBY
   git :init
   git add: "."
   git commit: %Q{ -m 'Initial commit with devise template from https://github.com/lewagon/rails-templates' }
