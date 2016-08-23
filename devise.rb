@@ -126,8 +126,6 @@ tmp/*
 .DS_Store
 public/assets
 TXT
-  run "bundle binstubs figaro"
-  run "bin/figaro install"
   generate('devise:install')
   generate('devise', 'User')
   run 'rm app/controllers/application_controller.rb'
@@ -150,6 +148,7 @@ end
 RUBY
   environment 'config.action_mailer.default_url_options = { host: "http://localhost:3000" }', env: 'development'
   environment 'config.action_mailer.default_url_options = { host: "http://TODO_PUT_YOUR_DOMAIN_HERE" }', env: 'production'
+  run "figaro install"
   git :init
   git add: "."
   git commit: %Q{ -m 'Initial commit with devise template from https://github.com/lewagon/rails-templates' }

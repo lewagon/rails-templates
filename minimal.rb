@@ -107,8 +107,7 @@ tmp/*
 .DS_Store
 public/assets
 TXT
-  run "bundle binstubs figaro"
-  run "bin/figaro install"
+  run "figaro install"
   git :init
   git add: "."
   git commit: %Q{ -m 'Initial commit with minmal template from https://github.com/lewagon/rails-templates' }
