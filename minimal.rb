@@ -107,6 +107,7 @@ tmp/*
 .DS_Store
 public/assets
 TXT
+  run "bundle binstubs figaro"
   run "bin/figaro install"
   git :init
   git add: "."

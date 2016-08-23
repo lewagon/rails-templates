@@ -126,6 +126,7 @@ tmp/*
 .DS_Store
 public/assets
 TXT
+  run "bundle binstubs figaro"
   run "bin/figaro install"
   generate('devise:install')
   generate('devise', 'User')
