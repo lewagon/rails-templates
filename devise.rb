@@ -105,11 +105,18 @@ HTML
 run "curl -L https://raw.githubusercontent.com/lewagon/awesome-navbars/master/templates/_navbar_wagon.html.erb > app/views/shared/_navbar.html.erb"
 run "curl -L https://raw.githubusercontent.com/lewagon/design/master/logos/png/logo_red_circle.png > app/assets/images/logo.png"
 
-run "rm README.rdoc"
 markdown_file_content = <<-MARKDOWN
 Rails app generated with [lewagon/rails-templates](https://github.com/lewagon/rails-templates), created by the [Le Wagon coding bootcamp](https://www.lewagon.com) team.
 MARKDOWN
 file 'README.md', markdown_file_content, force: true
+
+generators = <<-RUBY
+config.generators do |generate|
+      generate.assets false
+    end
+RUBY
+
+environment generators
 
 after_bundle do
   rake 'db:drop db:create db:migrate'

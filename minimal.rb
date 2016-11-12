@@ -85,11 +85,18 @@ file 'app/views/layouts/application.html.erb', <<-HTML
 </html>
 HTML
 
-run "rm README.rdoc"
 markdown_file_content = <<-MARKDOWN
 Rails app generated with [lewagon/rails-templates](https://github.com/lewagon/rails-templates), created by the [Le Wagon coding bootcamp](https://www.lewagon.com) team.
 MARKDOWN
 file 'README.md', markdown_file_content, force: true
+
+generators = <<-RUBY
+config.generators do |generate|
+      generate.assets false
+    end
+RUBY
+
+environment generators
 
 after_bundle do
   rake 'db:drop db:create db:migrate'
