@@ -9,7 +9,7 @@ gem 'puma'
 gem 'pg'
 gem 'figaro'
 gem 'jbuilder', '~> 2.0'
-gem 'devise'#{Rails.version >= "5" ? ", github: 'plataformatec/devise'" : nil}
+gem 'devise'
 gem 'redis'
 
 gem 'sass-rails'
