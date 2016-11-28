@@ -117,5 +117,5 @@ TXT
   run "figaro install"
   git :init
   git add: "."
-  git commit: %Q{ -m 'Initial commit with minmal template from https://github.com/lewagon/rails-templates' }
+  git commit: %Q{ -m 'Initial commit with minimal template from https://github.com/lewagon/rails-templates' }
 end
