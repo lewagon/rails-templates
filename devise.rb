@@ -40,6 +40,10 @@ file 'Procfile', <<-YAML
 web: bundle exec puma -C config/puma.rb
 YAML
 
+inject_into_file 'config/spring.rb', before: ').each { |path| Spring.watch(path) }' do
+  "  config/application.yml\n"
+end
+
 if Rails.version < "5"
 puma_file_content = <<-RUBY
 threads_count = ENV.fetch("RAILS_MAX_THREADS") { 5 }.to_i
