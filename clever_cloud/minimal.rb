@@ -195,6 +195,7 @@ TXT
 
   # Figaro
   ########################################
+  run "bundle binstubs figaro"
   run "figaro install"
 
   inside 'config' do
