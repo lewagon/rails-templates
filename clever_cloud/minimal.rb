@@ -66,6 +66,48 @@ RUBY
 file 'config/puma.rb', puma_file_content, force: true
 end
 
+# Clevercloud conf file
+########################################
+file 'clevercloud/ruby.json', <<-EOF
+{
+  "deploy": {
+    "env": "production",
+    "rakegoals": ["assets:precompile", "db:migrate"],
+    "static": "/public"
+  }
+}
+EOF
+
+# Database conf file
+########################################
+inside 'config' do
+  database_conf = <<-EOF
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+
+development:
+  <<: *default
+  database: #{app_name}_development
+
+test:
+  <<: *default
+  database: #{app_name}_test
+
+production:
+  adapter:  postgresql
+  encoding: utf8
+  poll:     10
+  host:     <%= ENV['POSTGRESQL_ADDON_HOST'] %>
+  port:     <%= ENV['POSTGRESQL_ADDON_PORT'] %>
+  database: <%= ENV['POSTGRESQL_ADDON_DB'] %>
+  username: <%= ENV['POSTGRESQL_ADDON_USER'] %>
+  password: <%= ENV['POSTGRESQL_ADDON_PASSWORD'] %>
+EOF
+  file 'database.yml', database_conf, force: true
+end
+
 # Assets
 ########################################
 run "rm -rf app/assets/stylesheets"
@@ -142,6 +184,7 @@ after_bundle do
   run "rm .gitignore"
   file '.gitignore', <<-TXT
 .bundle
+.clever.json
 log/*.log
 tmp/**/*
 tmp/*
@@ -153,6 +196,26 @@ TXT
   # Figaro
   ########################################
   run "figaro install"
+
+  inside 'config' do
+    figaro_yml = <<-EOF
+# Add configuration values here, as shown below.
+#
+# GOOGLE_API_BROWSER_KEY: "AI**********oc"
+#
+# development:
+#   FB_ID: "20**********84"
+#   FB_SECRET: "2b**********43"
+
+# production:
+#   FB_ID: "23**********38"
+#   FB_SECRET: "7f**********3b"
+production:
+  RAILS_ENV: "production"
+  SECRET_KEY_BASE: "#{SecureRandom.hex(64)}"
+EOF
+    file 'application.yml', figaro_yml, force: true
+  end
 
   # Git
   ########################################
