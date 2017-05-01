@@ -138,6 +138,7 @@ file 'README.md', markdown_file_content, force: true
 generators = <<-RUBY
 config.generators do |generate|
       generate.assets false
+      generate.helper false
     end
 RUBY
 
@@ -151,7 +152,7 @@ after_bundle do
   ########################################
   rake 'db:drop db:create db:migrate'
   generate('simple_form:install', '--bootstrap')
-  generate(:controller, 'pages', 'home', '--no-assets', '--skip-routes')
+  generate(:controller, 'pages', 'home', '--no-helper', '--no-assets', '--skip-routes')
 
   # Routes
   ########################################
