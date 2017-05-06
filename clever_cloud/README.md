@@ -7,7 +7,7 @@ and [Clever Cloud](http://clever-cloud.com/) configuration using
 ### Minimal
 
 ```bash
-rails new \
+rails _5.0.2_ new new \
   -T --database postgresql \
   -m https://raw.githubusercontent.com/lewagon/rails-templates/master/clever_cloud/minimal.rb \
   CHANGE_THIS_TO_YOUR_RAILS_APP_NAME
@@ -16,7 +16,7 @@ rails new \
 ### Devise
 
 ```bash
-rails new \
+rails _5.0.2_ new new \
   -T --database postgresql \
   -m https://raw.githubusercontent.com/lewagon/rails-templates/master/clever_cloud/devise.rb \
   CHANGE_THIS_TO_YOUR_RAILS_APP_NAME
