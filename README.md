@@ -10,7 +10,7 @@ Get a minimal rails 5 app ready to be deployed on Heroku with Bootstrap, Simple 
 
 ```bash
 gem install rails -v 5.0.3 # Maybe you already have it :)
-rails _5.0.3_ new \
+rails new \
   -T --database postgresql \
   -m https://raw.githubusercontent.com/lewagon/rails-templates/master/minimal.rb \
   CHANGE_THIS_TO_YOUR_RAILS_APP_NAME
@@ -23,7 +23,7 @@ Same as minimal **plus** a Devise install with a generated `User` model.
 
 ```bash
 gem install rails -v 5.0.3 # Maybe you already have it :)
-rails _5.0.3_ new \
+rails new \
   -T --database postgresql \
   -m https://raw.githubusercontent.com/lewagon/rails-templates/master/devise.rb \
   CHANGE_THIS_TO_YOUR_RAILS_APP_NAME

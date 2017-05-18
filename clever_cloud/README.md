@@ -8,7 +8,7 @@ and [Clever Cloud](http://clever-cloud.com/) configuration using
 
 ```bash
 gem install rails -v 5.0.3 # Maybe you already have it :)
-rails _5.0.3_ new \
+rails new \
   -T --database postgresql \
   -m https://raw.githubusercontent.com/lewagon/rails-templates/master/clever_cloud/minimal.rb \
   CHANGE_THIS_TO_YOUR_RAILS_APP_NAME
@@ -18,7 +18,7 @@ rails _5.0.3_ new \
 
 ```bash
 gem install rails -v 5.0.3 # Maybe you already have it :)
-rails _5.0.3_ new \
+rails new \
   -T --database postgresql \
   -m https://raw.githubusercontent.com/lewagon/rails-templates/master/clever_cloud/devise.rb \
   CHANGE_THIS_TO_YOUR_RAILS_APP_NAME
