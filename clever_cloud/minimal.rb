@@ -5,13 +5,13 @@ run 'pgrep spring | xargs kill -9'
 run 'rm Gemfile'
 file 'Gemfile', <<-RUBY
 source 'https://rubygems.org'
-ruby "#{RUBY_VERSION}"
+ruby '#{RUBY_VERSION}'
 
 gem 'figaro'
 gem 'jbuilder', '~> 2.0'
 gem 'pg'
 gem 'puma'
-gem 'rails', "#{Rails.version}"
+gem 'rails', '#{Rails.version}'
 gem 'redis'
 
 gem 'autoprefixer-rails'
@@ -167,6 +167,7 @@ after_bundle do
   run 'rm .gitignore'
   file '.gitignore', <<-TXT
 .bundle
+.clever.json
 log/*.log
 tmp/**/*
 tmp/*
@@ -179,6 +180,14 @@ TXT
   ########################################
   run 'bundle binstubs figaro'
   run 'figaro install'
+  inside 'config' do
+    figaro_yml = <<-EOF
+production:
+  RAILS_ENV: "production"
+  SECRET_KEY_BASE: "#{SecureRandom.hex(64)}"
+EOF
+    file 'application.yml', figaro_yml, force: true
+  end
 
   # Git
   ########################################
