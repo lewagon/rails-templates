@@ -1,8 +1,8 @@
-run "pgrep spring | xargs kill -9"
+run 'pgrep spring | xargs kill -9'
 
 # GEMFILE
 ########################################
-run "rm Gemfile"
+run 'rm Gemfile'
 file 'Gemfile', <<-RUBY
 source 'https://rubygems.org'
 ruby '#{RUBY_VERSION}'
@@ -26,20 +26,17 @@ gem 'autoprefixer-rails'
 group :development, :test do
   gem 'binding_of_caller'
   gem 'better_errors'
-  #{Rails.version >= "5" ? nil : "gem 'quiet_assets'"}
   gem 'pry-byebug'
   gem 'pry-rails'
   gem 'spring'
-  #{Rails.version >= "5" ? "gem 'listen', '~> 3.0.5'" : nil}
-  #{Rails.version >= "5" ? "gem 'spring-watcher-listen', '~> 2.0.0'" : nil}
+  gem 'listen', '~> 3.0.5'
+  gem 'spring-watcher-listen', '~> 2.0.0'
 end
-
-#{Rails.version < "5" ? "gem 'rails_12factor', group: :production" : nil}
 RUBY
 
 # Ruby version
 ########################################
-file ".ruby-version", RUBY_VERSION
+file '.ruby-version', RUBY_VERSION
 
 # Procfile
 ########################################
@@ -53,25 +50,11 @@ inject_into_file 'config/spring.rb', before: ').each { |path| Spring.watch(path)
   "  config/application.yml\n"
 end
 
-# Puma conf file
-########################################
-if Rails.version < "5"
-puma_file_content = <<-RUBY
-threads_count = ENV.fetch("RAILS_MAX_THREADS") { 5 }.to_i
-
-threads     threads_count, threads_count
-port        ENV.fetch("PORT") { 3000 }
-environment ENV.fetch("RAILS_ENV") { "development" }
-RUBY
-
-file 'config/puma.rb', puma_file_content, force: true
-end
-
 # Assets
 ########################################
-run "rm -rf app/assets/stylesheets"
-run "curl -L https://github.com/lewagon/stylesheets/archive/master.zip > stylesheets.zip"
-run "unzip stylesheets.zip -d app/assets && rm stylesheets.zip && mv app/assets/rails-stylesheets-master app/assets/stylesheets"
+run 'rm -rf app/assets/stylesheets'
+run 'curl -L https://github.com/lewagon/stylesheets/archive/master.zip > stylesheets.zip'
+run 'unzip stylesheets.zip -d app/assets && rm stylesheets.zip && mv app/assets/rails-stylesheets-master app/assets/stylesheets'
 
 run 'rm app/assets/javascripts/application.js'
 file 'app/assets/javascripts/application.js', <<-JS
@@ -92,12 +75,13 @@ file 'app/views/layouts/application.html.erb', <<-HTML
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="UTF-8">
     <title>TODO</title>
     <%= csrf_meta_tags %>
-    #{Rails.version >= "5" ? "<%= action_cable_meta_tag %>" : nil}
+    <%= action_cable_meta_tag %>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <%= stylesheet_link_tag    'application', media: 'all' %>
+    <%= stylesheet_link_tag 'application', media: 'all' %>
   </head>
   <body>
     <%= render 'shared/navbar' %>
@@ -123,8 +107,8 @@ file 'app/views/shared/_flashes.html.erb', <<-HTML
 <% end %>
 HTML
 
-run "curl -L https://raw.githubusercontent.com/lewagon/awesome-navbars/master/templates/_navbar_wagon.html.erb > app/views/shared/_navbar.html.erb"
-run "curl -L https://raw.githubusercontent.com/lewagon/design/master/logos/png/logo_red_circle.png > app/assets/images/logo.png"
+run 'curl -L https://raw.githubusercontent.com/lewagon/awesome-navbars/master/templates/_navbar_wagon.html.erb > app/views/shared/_navbar.html.erb'
+run 'curl -L https://raw.githubusercontent.com/lewagon/rails-templates/master/logo.png > app/assets/images/logo.png'
 
 # README
 ########################################
@@ -137,9 +121,9 @@ file 'README.md', markdown_file_content, force: true
 ########################################
 generators = <<-RUBY
 config.generators do |generate|
-      generate.assets false
-      generate.helper false
-    end
+  generate.assets false
+  generate.helper false
+end
 RUBY
 
 environment generators
@@ -152,7 +136,7 @@ after_bundle do
   ########################################
   rake 'db:drop db:create db:migrate'
   generate('simple_form:install', '--bootstrap')
-  generate(:controller, 'pages', 'home', '--no-helper', '--no-assets', '--skip-routes')
+  generate(:controller, 'pages', 'home', '--skip-routes')
 
   # Routes
   ########################################
@@ -160,7 +144,7 @@ after_bundle do
 
   # Git ignore
   ########################################
-  run "rm .gitignore"
+  run 'rm .gitignore'
   file '.gitignore', <<-TXT
 .bundle
 log/*.log
@@ -210,11 +194,12 @@ RUBY
 
   # Figaro
   ########################################
-  run "figaro install"
+  run 'bundle binstubs figaro'
+  run 'figaro install'
 
   # Git
   ########################################
   git :init
-  git add: "."
-  git commit: %Q{ -m 'Initial commit with devise template from https://github.com/lewagon/rails-templates' }
+  git add: '.'
+  git commit: "-m 'Initial commit with devise template from https://github.com/lewagon/rails-templates'"
 end
