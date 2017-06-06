@@ -1,8 +1,8 @@
-run "pgrep spring | xargs kill -9"
+run 'pgrep spring | xargs kill -9'
 
 # GEMFILE
 ########################################
-run "rm Gemfile"
+run 'rm Gemfile'
 file 'Gemfile', <<-RUBY
 source 'https://rubygems.org'
 ruby '#{RUBY_VERSION}'
@@ -36,7 +36,7 @@ RUBY
 
 # Ruby version
 ########################################
-file ".ruby-version", RUBY_VERSION
+file '.ruby-version', RUBY_VERSION
 
 # Procfile
 ########################################
@@ -144,7 +144,7 @@ after_bundle do
 
   # Git ignore
   ########################################
-  run "rm .gitignore"
+  run 'rm .gitignore'
   file '.gitignore', <<-TXT
 .bundle
 log/*.log
