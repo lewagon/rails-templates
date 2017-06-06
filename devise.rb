@@ -5,31 +5,31 @@ run 'pgrep spring | xargs kill -9'
 run 'rm Gemfile'
 file 'Gemfile', <<-RUBY
 source 'https://rubygems.org'
-ruby '#{RUBY_VERSION}'
+ruby "#{RUBY_VERSION}"
 
-gem 'rails', '#{Rails.version}'
-gem 'puma'
-gem 'pg'
+gem 'devise'
 gem 'figaro'
 gem 'jbuilder', '~> 2.0'
-gem 'devise'
+gem 'pg'
+gem 'puma'
+gem 'rails', "#{Rails.version}"
 gem 'redis'
 
-gem 'sass-rails'
-gem 'jquery-rails'
-gem 'uglifier'
+gem 'autoprefixer-rails'
 gem 'bootstrap-sass'
 gem 'font-awesome-sass'
+gem 'jquery-rails'
+gem 'sass-rails'
 gem 'simple_form'
-gem 'autoprefixer-rails'
+gem 'uglifier'
 
 group :development, :test do
-  gem 'binding_of_caller'
   gem 'better_errors'
+  gem 'binding_of_caller'
+  gem 'listen', '~> 3.0.5'
   gem 'pry-byebug'
   gem 'pry-rails'
   gem 'spring'
-  gem 'listen', '~> 3.0.5'
   gem 'spring-watcher-listen', '~> 2.0.0'
 end
 RUBY
@@ -47,7 +47,7 @@ YAML
 # Spring conf file
 ########################################
 inject_into_file 'config/spring.rb', before: ').each { |path| Spring.watch(path) }' do
-  "  config/application.yml\n"
+  '  config/application.yml\n'
 end
 
 # Assets
@@ -76,11 +76,10 @@ file 'app/views/layouts/application.html.erb', <<-HTML
 <html>
   <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>TODO</title>
     <%= csrf_meta_tags %>
     <%= action_cable_meta_tag %>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <%= stylesheet_link_tag 'application', media: 'all' %>
   </head>
   <body>
@@ -121,9 +120,9 @@ file 'README.md', markdown_file_content, force: true
 ########################################
 generators = <<-RUBY
 config.generators do |generate|
-  generate.assets false
-  generate.helper false
-end
+      generate.assets false
+      generate.helper false
+    end
 RUBY
 
 environment generators
@@ -155,7 +154,7 @@ tmp/*
 public/assets
 TXT
 
-  # Devie install + user
+  # Devise install + user
   ########################################
   generate('devise:install')
   generate('devise', 'User')
@@ -170,7 +169,7 @@ class ApplicationController < ActionController::Base
 end
 RUBY
 
-  # migrate + devie views
+  # migrate + devise views
   ########################################
   rake 'db:migrate'
   generate('devise:views')
@@ -180,7 +179,7 @@ RUBY
   run 'rm app/controllers/pages_controller.rb'
   file 'app/controllers/pages_controller.rb', <<-RUBY
 class PagesController < ApplicationController
-  skip_before_action :authenticate_user!, only: [ :home ]
+  skip_before_action :authenticate_user!, only: [:home]
 
   def home
   end
