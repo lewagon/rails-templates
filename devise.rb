@@ -52,9 +52,9 @@ end
 
 # Assets
 ########################################
-run "rm -rf app/assets/stylesheets"
-run "curl -L https://github.com/lewagon/stylesheets/archive/master.zip > stylesheets.zip"
-run "unzip stylesheets.zip -d app/assets && rm stylesheets.zip && mv app/assets/rails-stylesheets-master app/assets/stylesheets"
+run 'rm -rf app/assets/stylesheets'
+run 'curl -L https://github.com/lewagon/stylesheets/archive/master.zip > stylesheets.zip'
+run 'unzip stylesheets.zip -d app/assets && rm stylesheets.zip && mv app/assets/rails-stylesheets-master app/assets/stylesheets'
 
 run 'rm app/assets/javascripts/application.js'
 file 'app/assets/javascripts/application.js', <<-JS
@@ -121,9 +121,9 @@ file 'README.md', markdown_file_content, force: true
 ########################################
 generators = <<-RUBY
 config.generators do |generate|
-      generate.assets false
-      generate.helper false
-    end
+  generate.assets false
+  generate.helper false
+end
 RUBY
 
 environment generators
@@ -194,12 +194,12 @@ RUBY
 
   # Figaro
   ########################################
-  run "bundle binstubs figaro"
-  run "figaro install"
+  run 'bundle binstubs figaro'
+  run 'figaro install'
 
   # Git
   ########################################
   git :init
-  git add: "."
-  git commit: %Q{ -m 'Initial commit with devise template from https://github.com/lewagon/rails-templates' }
+  git add: '.'
+  git commit: "-m 'Initial commit with devise template from https://github.com/lewagon/rails-templates'"
 end
