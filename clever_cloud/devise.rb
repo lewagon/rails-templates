@@ -95,6 +95,7 @@ end
 # Assets
 ########################################
 run 'rm -rf app/assets/stylesheets'
+run 'rm -rf vendor'
 run 'curl -L https://github.com/lewagon/stylesheets/archive/master.zip > stylesheets.zip'
 run 'unzip stylesheets.zip -d app/assets && rm stylesheets.zip && mv app/assets/rails-stylesheets-master app/assets/stylesheets'
 
@@ -238,14 +239,14 @@ RUBY
   ########################################
   run 'bundle binstubs figaro'
   run 'figaro install'
-  inside 'config' do
-    figaro_yml = <<-EOF
-production:
-  RAILS_ENV: "production"
-  SECRET_KEY_BASE: "#{SecureRandom.hex(64)}"
-EOF
-    file 'application.yml', figaro_yml, force: true
-  end
+#   inside 'config' do
+#     figaro_yml = <<-EOF
+# production:
+#   RAILS_ENV: "production"
+#   SECRET_KEY_BASE: "#{SecureRandom.hex(64)}"
+# EOF
+#     file 'application.yml', figaro_yml, force: true
+#   end
 
   # Git
   ########################################
