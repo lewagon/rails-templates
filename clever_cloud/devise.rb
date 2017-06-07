@@ -12,7 +12,8 @@ gem 'puma'
 gem 'pg'
 gem 'figaro'
 gem 'jbuilder', '~> 2.0'
-gem 'devise'
+gem 'devise', git: 'https://github.com/gogovan/devise.git', branch: 'rails-5.1'
+gem 'erubis'
 gem 'redis'
 
 gem 'sass-rails'
@@ -20,7 +21,7 @@ gem 'jquery-rails'
 gem 'uglifier'
 gem 'bootstrap-sass'
 gem 'font-awesome-sass'
-gem 'simple_form'
+gem 'simple_form', github: 'elsurudo/simple_form', branch: 'rails-5.1.0'
 gem 'autoprefixer-rails'
 
 group :development, :test do
@@ -279,5 +280,5 @@ EOF
   ########################################
   git :init
   git add: "."
-  git commit: %Q{ -m 'Initial commit with devise template from https://github.com/lewagon/rails-templates' }
+  git commit: %Q{ -m 'Initial commit with devise template from https://github.com/adesurirey/rails-templates' }
 end
