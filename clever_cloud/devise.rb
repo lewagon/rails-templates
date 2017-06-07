@@ -239,14 +239,14 @@ RUBY
   ########################################
   run 'bundle binstubs figaro'
   run 'figaro install'
-#   inside 'config' do
-#     figaro_yml = <<-EOF
-# production:
-#   RAILS_ENV: "production"
-#   SECRET_KEY_BASE: "#{SecureRandom.hex(64)}"
-# EOF
-#     file 'application.yml', figaro_yml, force: true
-#   end
+  inside 'config' do
+    figaro_yml = <<-EOF
+production:
+  RAILS_ENV: "production"
+  SECRET_KEY_BASE: "#{SecureRandom.hex(64)}"
+EOF
+    file 'application.yml', figaro_yml, force: true
+  end
 
   # Git
   ########################################
