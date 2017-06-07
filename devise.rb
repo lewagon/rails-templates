@@ -217,5 +217,5 @@ RUBY
   ########################################
   git :init
   git add: "."
-  git commit: %Q{ -m 'Initial commit with devise template from https://github.com/lewagon/rails-templates' }
+  git commit: %Q{ -m 'Initial commit with devise template from https://github.com/adesurirey/rails-templates' }
 end
