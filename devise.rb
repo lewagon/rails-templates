@@ -12,7 +12,8 @@ gem 'puma'
 gem 'pg'
 gem 'figaro'
 gem 'jbuilder', '~> 2.0'
-gem 'devise'
+gem 'devise', git: 'https://github.com/gogovan/devise.git', branch: 'rails-5.1'
+gem 'erubis'
 gem 'redis'
 
 gem 'sass-rails'
@@ -20,10 +21,11 @@ gem 'jquery-rails'
 gem 'uglifier'
 gem 'bootstrap-sass'
 gem 'font-awesome-sass'
-gem 'simple_form'
+gem 'simple_form', github: 'elsurudo/simple_form', branch: 'rails-5.1.0'
 gem 'autoprefixer-rails'
 
 group :development, :test do
+  gem 'annotate', git: 'https://github.com/ctran/annotate_models.git'
   gem 'binding_of_caller'
   gem 'better_errors'
   #{Rails.version >= "5" ? nil : "gem 'quiet_assets'"}
@@ -129,7 +131,7 @@ run "curl -L https://raw.githubusercontent.com/lewagon/design/master/logos/png/l
 # README
 ########################################
 markdown_file_content = <<-MARKDOWN
-Rails app generated with [lewagon/rails-templates](https://github.com/lewagon/rails-templates), created by the [Le Wagon coding bootcamp](https://www.lewagon.com) team.
+Rails app generated with [adesurirey/rails-templates](https://github.com/adesurirey/rails-templates), based on [Le Wagon coding bootcamp](https://www.lewagon.com) team template.
 MARKDOWN
 file 'README.md', markdown_file_content, force: true
 
@@ -186,7 +188,7 @@ class ApplicationController < ActionController::Base
 end
 RUBY
 
-  # migrate + devie views
+  # migrate + devise views
   ########################################
   rake 'db:migrate'
   generate('devise:views')
@@ -212,9 +214,13 @@ RUBY
   ########################################
   run "figaro install"
 
+  # Annotate
+  ########################################
+  generate('annotate:install')
+
   # Git
   ########################################
   git :init
   git add: "."
-  git commit: %Q{ -m 'Initial commit with devise template from https://github.com/lewagon/rails-templates' }
+  git commit: %Q{ -m 'Initial commit with devise template from https://github.com/adesurirey/rails-templates' }
 end
