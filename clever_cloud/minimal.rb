@@ -71,7 +71,6 @@ end
 file 'clevercloud/ruby.json', <<-EOF
 {
   "deploy": {
-    "env": "production",
     "rakegoals": ["assets:precompile", "db:migrate"],
     "static": "/public"
   }
@@ -96,14 +95,7 @@ test:
   database: #{app_name}_test
 
 production:
-  adapter:  postgresql
-  encoding: utf8
-  poll:     10
-  host:     <%= ENV['POSTGRESQL_ADDON_HOST'] %>
-  port:     <%= ENV['POSTGRESQL_ADDON_PORT'] %>
-  database: <%= ENV['POSTGRESQL_ADDON_DB'] %>
-  username: <%= ENV['POSTGRESQL_ADDON_USER'] %>
-  password: <%= ENV['POSTGRESQL_ADDON_PASSWORD'] %>
+  url: <%= ENV['POSTGRESQL_ADDON_URI'] %>
 EOF
   file 'database.yml', database_conf, force: true
 end
