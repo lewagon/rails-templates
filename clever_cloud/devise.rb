@@ -79,6 +79,7 @@ test:
   database: #{app_name}_test
 
 production:
+  <<: *default
   url: <%= ENV['POSTGRESQL_ADDON_URI'] %>
 EOF
   file 'database.yml', database_conf, force: true
