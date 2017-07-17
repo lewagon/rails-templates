@@ -26,6 +26,7 @@ group :development, :test do
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'listen', '~> 3.0.5'
+  gem 'rb-readline'
   gem 'pry-byebug'
   gem 'pry-rails'
   gem 'spring'
