@@ -9,7 +9,7 @@ using [Rails Templates](http://guides.rubyonrails.org/rails_application_template
 Get a minimal rails 5 app ready to be deployed on Heroku with Bootstrap, Simple form and debugging gems.
 
 ```bash
-gem install rails -v 5.0.3 # Maybe you already have it :)
+gem install rails -v 5.0.5 # Maybe you already have it :)
 rails new \
   -T --database postgresql \
   -m https://raw.githubusercontent.com/lewagon/rails-templates/master/minimal.rb \
