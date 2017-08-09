@@ -23,17 +23,13 @@ gem 'simple_form'
 gem 'autoprefixer-rails'
 
 group :development, :test do
-  gem 'binding_of_caller'
-  gem 'better_errors'
-  #{Rails.version >= "5" ? nil : "gem 'quiet_assets'"}
   gem 'pry-byebug'
   gem 'pry-rails'
+  gem 'web-console', '>= 3.3.0'
+  gem 'listen', '~> 3.0.5'
   gem 'spring'
-  #{Rails.version >= "5" ? "gem 'listen', '~> 3.0.5'" : nil}
-  #{Rails.version >= "5" ? "gem 'spring-watcher-listen', '~> 2.0.0'" : nil}
+  gem 'spring-watcher-listen', '~> 2.0.0'
 end
-
-#{Rails.version < "5" ? "gem 'rails_12factor', group: :production" : nil}
 RUBY
 
 # Ruby version
