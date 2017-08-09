@@ -22,7 +22,7 @@ Same as minimal **plus** a Devise install with a generated `User` model.
 
 
 ```bash
-gem install rails -v 5.0.3 # Maybe you already have it :)
+gem install rails -v 5.0.5 # Maybe you already have it :)
 rails new \
   -T --database postgresql \
   -m https://raw.githubusercontent.com/lewagon/rails-templates/master/devise.rb \
