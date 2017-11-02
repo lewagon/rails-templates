@@ -53,8 +53,7 @@ end
 file 'clevercloud/ruby.json', <<-EOF
 {
   "deploy": {
-    "rakegoals": ["assets:precompile", "db:migrate"],
-    "static": "/public"
+    "rakegoals": ["assets:precompile", "db:migrate"]
   }
 }
 EOF
@@ -178,6 +177,7 @@ TXT
 production:
   RAILS_ENV: "production"
   SECRET_KEY_BASE: "#{SecureRandom.hex(64)}"
+  STATIC_FILES_PATH: "/public/"
 EOF
     file 'application.yml', figaro_yml, force: true
   end
