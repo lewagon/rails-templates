@@ -18,10 +18,10 @@ gem 'redis'
 gem 'autoprefixer-rails'
 gem 'bootstrap-sass'
 gem 'font-awesome-sass'
-gem 'jquery-rails'
 gem 'sass-rails'
 gem 'simple_form'
 gem 'uglifier'
+gem 'webpacker'
 
 group :development, :test do
   gem 'pry-byebug'
@@ -58,9 +58,7 @@ run 'unzip stylesheets.zip -d app/assets && rm stylesheets.zip && mv app/assets/
 
 run 'rm app/assets/javascripts/application.js'
 file 'app/assets/javascripts/application.js', <<-JS
-//= require jquery
-//= require jquery_ujs
-//= require bootstrap-sprockets
+//= require rails-ujs
 //= require_tree .
 JS
 
@@ -81,12 +79,14 @@ file 'app/views/layouts/application.html.erb', <<-HTML
     <%= csrf_meta_tags %>
     <%= action_cable_meta_tag %>
     <%= stylesheet_link_tag 'application', media: 'all' %>
+    <%#= stylesheet_pack_tag 'application', media: 'all' %> <!-- Uncomment if you import CSS in app/javascript/packs/application.js -->
   </head>
   <body>
     <%= render 'shared/navbar' %>
     <%= render 'shared/flashes' %>
     <%= yield %>
     <%= javascript_include_tag 'application' %>
+    <%= javascript_pack_tag 'application' %>
   </body>
 </html>
 HTML
@@ -149,9 +149,14 @@ after_bundle do
 log/*.log
 tmp/**/*
 tmp/*
+!log/.keep
+!tmp/.keep
 *.swp
 .DS_Store
 public/assets
+public/packs
+public/packs-test
+node_modules
 TXT
 
   # Devise install + user
@@ -190,6 +195,29 @@ RUBY
   ########################################
   environment 'config.action_mailer.default_url_options = { host: "http://localhost:3000" }', env: 'development'
   environment 'config.action_mailer.default_url_options = { host: "http://TODO_PUT_YOUR_DOMAIN_HERE" }', env: 'production'
+
+  # Webpacker / Yarn
+  ########################################
+  rake 'webpacker:install'
+  run 'rm app/javascript/packs/application.js'
+  run 'yarn add jquery bootstrap@3'
+  file 'app/javascript/packs/application.js', <<-JS
+import "bootstrap";
+JS
+
+  inject_into_file 'config/webpack/environment.js', before: 'module.exports' do
+<<-JS
+// Bootstrap 3 has a dependency over jQuery:
+const webpack = require('webpack')
+environment.plugins.set('Provide',
+  new webpack.ProvidePlugin({
+    $: 'jquery',
+    jQuery: 'jquery'
+  })
+)
+
+JS
+  end
 
   # Figaro
   ########################################
