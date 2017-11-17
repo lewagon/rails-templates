@@ -233,7 +233,6 @@ RUBY
   inside 'config' do
     figaro_yml = <<-EOF
 production:
-  CC_RACKUP_SERVER: "puma"
   RAILS_ENV: "production"
   SECRET_KEY_BASE: "#{SecureRandom.hex(64)}"
   STATIC_FILES_PATH: "/public/"
