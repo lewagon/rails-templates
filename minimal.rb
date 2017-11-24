@@ -131,6 +131,7 @@ tmp/*
 *.swp
 .DS_Store
 public/assets
+.byebug_history
 TXT
 
   # Figaro
