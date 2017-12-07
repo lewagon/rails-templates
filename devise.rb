@@ -202,7 +202,6 @@ RUBY
 
   # Webpacker / Yarn
   ########################################
-  rake 'webpacker:install'
   run 'rm app/javascript/packs/application.js'
   run 'yarn add jquery bootstrap@3'
   file 'app/javascript/packs/application.js', <<-JS
