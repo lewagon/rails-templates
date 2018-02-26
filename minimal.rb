@@ -150,8 +150,7 @@ TXT
 import "bootstrap";
 JS
 
-  inject_into_file 'config/webpack/environment.js', before: 'module.exports' do
-<<-JS
+  file 'config/webpack/environment.js', <<-JS
 // Bootstrap 3 has a dependency over jQuery:
 const webpack = require('webpack')
 environment.plugins.set('Provide',
@@ -162,7 +161,6 @@ environment.plugins.set('Provide',
 )
 
 JS
-  end
 
   # Figaro
   ########################################
