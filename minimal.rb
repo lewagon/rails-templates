@@ -167,6 +167,10 @@ JS
   run 'bundle binstubs figaro'
   run 'figaro install'
 
+  # Webpacker
+  ########################################
+  rails_command 'webpacker:install'
+
   # Git
   ########################################
   git :init
