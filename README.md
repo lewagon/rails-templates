@@ -3,6 +3,13 @@
 Quickly generate a rails app with the default [Wagon](https://www.lewagon.com) configuration
 using [Rails Templates](http://guides.rubyonrails.org/rails_application_templates.html).
 
+## Interactive
+
+Answer questions and get a rails 5.1+ app according to your needs
+
+```bash
+ruby https://raw.githubusercontent.com/lewagon/rails-templates/master/init.rb
+```
 
 ## Minimal
 
