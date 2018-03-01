@@ -125,6 +125,7 @@ generators = <<-RUBY
 config.generators do |generate|
       generate.assets false
       generate.helper false
+      generate.test_framework  :test_unit, fixture: false
     end
 RUBY
 
@@ -138,7 +139,7 @@ after_bundle do
   ########################################
   rake 'db:drop db:create db:migrate'
   generate('simple_form:install', '--bootstrap')
-  generate(:controller, 'pages', 'home', '--skip-routes')
+  generate(:controller, 'pages', 'home', '--skip-routes', '--no-test-framework')
 
   # Routes
   ########################################
