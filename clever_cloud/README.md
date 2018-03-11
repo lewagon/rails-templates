@@ -6,12 +6,12 @@ and [Clever Cloud](http://clever-cloud.com/) configuration using
 
 ### Minimal
 
-Get a minimal rails 5 app ready to be deployed on Clever Cloud with Bootstrap, Simple form and debugging gems.
+Get a minimal rails 5.1+ app ready to be deployed on Clever Cloud with Bootstrap, Simple form and debugging gems.
 
 ```bash
-gem install rails -v 5.0.5 # Maybe you already have it :)
 rails new \
-  -T --database postgresql \
+  --database postgresql \
+  --webpack \
   -m https://raw.githubusercontent.com/lewagon/rails-templates/master/clever_cloud/minimal.rb \
   CHANGE_THIS_TO_YOUR_RAILS_APP_NAME
 ```
@@ -21,9 +21,9 @@ rails new \
 Same as minimal **plus** a Devise install with a generated `User` model.
 
 ```bash
-gem install rails -v 5.0.5 # Maybe you already have it :)
 rails new \
-  -T --database postgresql \
+  --database postgresql \
+  --webpack \
   -m https://raw.githubusercontent.com/lewagon/rails-templates/master/clever_cloud/devise.rb \
   CHANGE_THIS_TO_YOUR_RAILS_APP_NAME
 ```

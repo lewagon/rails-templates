@@ -15,12 +15,12 @@ gem 'rails', '#{Rails.version}'
 gem 'redis'
 
 gem 'autoprefixer-rails'
-gem 'bootstrap-sass'
-gem 'font-awesome-sass'
-gem 'jquery-rails'
+gem 'bootstrap-sass', '~> 3.3'
+gem 'font-awesome-sass', '~> 4.7'
 gem 'sass-rails'
 gem 'simple_form'
 gem 'uglifier'
+gem 'webpacker'
 
 group :development do
   gem 'web-console', '>= 3.3.0'
@@ -94,9 +94,7 @@ run 'unzip stylesheets.zip -d app/assets && rm stylesheets.zip && mv app/assets/
 
 run 'rm app/assets/javascripts/application.js'
 file 'app/assets/javascripts/application.js', <<-JS
-//= require jquery
-//= require jquery_ujs
-//= require bootstrap-sprockets
+//= require rails-ujs
 //= require_tree .
 JS
 
@@ -117,10 +115,12 @@ file 'app/views/layouts/application.html.erb', <<-HTML
     <%= csrf_meta_tags %>
     <%= action_cable_meta_tag %>
     <%= stylesheet_link_tag 'application', media: 'all' %>
+    <%#= stylesheet_pack_tag 'application', media: 'all' %> <!-- Uncomment if you import CSS in app/javascript/packs/application.js -->
   </head>
   <body>
     <%= yield %>
     <%= javascript_include_tag 'application' %>
+    <%= javascript_pack_tag 'application' %>
   </body>
 </html>
 HTML
@@ -138,6 +138,7 @@ generators = <<-RUBY
 config.generators do |generate|
       generate.assets false
       generate.helper false
+      generate.test_framework :test_unit, fixture: false
     end
 RUBY
 
@@ -149,9 +150,9 @@ environment generators
 after_bundle do
   # Generators: db + simple form + pages controller
   ########################################
-  rake 'db:drop db:create db:migrate'
+  rails_command 'db:drop db:create db:migrate'
   generate('simple_form:install', '--bootstrap')
-  generate(:controller, 'pages', 'home', '--skip-routes')
+  generate(:controller, 'pages', 'home', '--skip-routes', '--no-test-framework')
 
   # Routes
   ########################################
@@ -166,10 +167,38 @@ after_bundle do
 log/*.log
 tmp/**/*
 tmp/*
+!log/.keep
+!tmp/.keep
 *.swp
 .DS_Store
 public/assets
+public/packs
+public/packs-test
+node_modules
+.byebug_history
 TXT
+
+  # Webpacker / Yarn
+  ########################################
+  run 'rm app/javascript/packs/application.js'
+  run 'yarn add jquery bootstrap@3'
+  file 'app/javascript/packs/application.js', <<-JS
+import "bootstrap";
+JS
+
+  inject_into_file 'config/webpack/environment.js', before: 'module.exports' do
+<<-JS
+// Bootstrap 3 has a dependency over jQuery:
+const webpack = require('webpack')
+environment.plugins.prepend('Provide',
+  new webpack.ProvidePlugin({
+    $: 'jquery',
+    jQuery: 'jquery'
+  })
+)
+
+JS
+  end
 
   # Figaro
   ########################################
