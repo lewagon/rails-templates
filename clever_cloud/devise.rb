@@ -239,6 +239,7 @@ production:
   RAILS_ENV: "production"
   SECRET_KEY_BASE: "#{SecureRandom.hex(64)}"
   STATIC_FILES_PATH: "/public/"
+  CACHE_DEPENDENCIES: "true" # disable it when going live
 EOF
     file 'application.yml', figaro_yml, force: true
   end
