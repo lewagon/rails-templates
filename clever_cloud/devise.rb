@@ -216,7 +216,7 @@ RUBY
 
   # migrate + devise views
   ########################################
-  rake 'db:migrate'
+  rails_command 'db:migrate'
   generate('devise:views')
 
   # Pages Controller
