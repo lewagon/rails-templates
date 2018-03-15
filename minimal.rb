@@ -140,6 +140,7 @@ public/assets
 public/packs
 public/packs-test
 node_modules
+yarn-error.log
 .byebug_history
 TXT
 
