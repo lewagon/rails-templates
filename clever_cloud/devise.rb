@@ -22,7 +22,6 @@ gem 'sass-rails'
 gem 'simple_form'
 gem 'uglifier'
 gem 'webpacker'
-gem 'bootsnap', require: false
 
 group :development do
   gem 'web-console', '>= 3.3.0'
@@ -51,12 +50,6 @@ YAML
 ########################################
 inject_into_file 'config/spring.rb', before: ').each { |path| Spring.watch(path) }' do
   '  config/application.yml\n'
-end
-
-# Bootsnap setup
-########################################
-inject_into_file 'config/boot.rb', after: "require 'bundler/setup' # Set up gems listed in the Gemfile." do
-  "\nrequire 'bootsnap/setup'"
 end
 
 # Clevercloud conf file
