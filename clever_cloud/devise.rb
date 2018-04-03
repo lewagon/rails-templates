@@ -266,10 +266,14 @@ JS
   inside 'config' do
     figaro_yml = <<-EOF
 production:
+  # rails
   RAILS_ENV: "production"
   SECRET_KEY_BASE: "#{SecureRandom.hex(64)}"
+  # clever cloud
   STATIC_FILES_PATH: "/public/"
   CACHE_DEPENDENCIES: "true" # disable it when going live
+  CC_RACKUP_SERVER: "puma"
+  PORT: "8080"
 EOF
     file 'application.yml', figaro_yml, force: true
   end
