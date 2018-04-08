@@ -182,7 +182,7 @@ TXT
   # Webpacker / Yarn
   ########################################
   run 'rm app/javascript/packs/application.js'
-  run 'yarn add jquery bootstrap@3'
+  run 'yarn add jquery bootstrap@3 bootstrap-sass'
   file 'app/javascript/packs/application.js', <<-JS
 import "bootstrap";
 JS
