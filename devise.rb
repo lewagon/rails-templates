@@ -264,6 +264,17 @@ JS
   # Rubocop
   ########################################
   file '.rubocop.yml', <<-YML
+AllCops:
+  Exclude:
+    - 'bin/**/*'
+    - 'db/**/*'
+    - 'config/**/*'
+    - 'node_modules/**/*'
+    - 'script/**/*'
+    - 'support/**/*'
+    - 'tmp/**/*'
+    - 'test/**/*'
+
 ConditionalAssignment:
   Enabled: false
 StringLiterals:
@@ -287,6 +298,12 @@ CyclomaticComplexity:
 MethodMissing:
   Enabled: false
 Style/FrozenStringLiteralComment:
+  Enabled: false
+LineLength:
+  Max: 120
+Style/EmptyMethod:
+  Enabled: false
+Bundler/OrderedGems:
   Enabled: false
 YML
 
