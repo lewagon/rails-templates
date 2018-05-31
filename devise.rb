@@ -236,6 +236,35 @@ JS
   run 'bundle binstubs figaro'
   run 'figaro install'
 
+  # Rubocop
+  ########################################
+  file '.rubocop.yml', <<-YML
+ConditionalAssignment:
+  Enabled: false
+StringLiterals:
+  Enabled: false
+RedundantReturn:
+  Enabled: false
+Documentation:
+  Enabled: false
+WordArray:
+  Enabled: false
+AbcSize:
+  Enabled: false
+MutableConstant:
+  Enabled: false
+SignalException:
+  Enabled: false
+Casecmp:
+  Enabled: false
+CyclomaticComplexity:
+  Enabled: false
+MethodMissing:
+  Enabled: false
+Style/FrozenStringLiteralComment:
+  Enabled: false
+YML
+
   # Git
   ########################################
   git :init
