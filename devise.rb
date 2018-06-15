@@ -189,7 +189,7 @@ public/packs-test
 node_modules
 yarn-error.log
 .byebug_history
-.env
+.env*
 TXT
 
   # Devise install + user
