@@ -279,6 +279,9 @@ EOF
     file 'application.yml', figaro_yml, force: true
   end
 
+  # Rubocop
+  run 'curl -L https://raw.githubusercontent.com/lewagon/rails-templates/master/.rubocop.yml > .rubocop.yml'
+
   # Git
   ########################################
   git :init
