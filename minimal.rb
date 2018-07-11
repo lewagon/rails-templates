@@ -28,6 +28,7 @@ group :development do
 end
 
 group :development, :test do
+  gem 'dotenv-rails'
   gem 'pry-byebug'
   gem 'pry-rails'
   gem 'listen', '~> 3.0.5'
@@ -45,12 +46,6 @@ file '.ruby-version', RUBY_VERSION
 file 'Procfile', <<-YAML
 web: bundle exec puma -C config/puma.rb
 YAML
-
-# Spring conf file
-########################################
-inject_into_file 'config/spring.rb', before: ').each { |path| Spring.watch(path) }' do
-  '  config/application.yml\n'
-end
 
 # Assets
 ########################################
@@ -174,6 +169,7 @@ public/packs-test
 node_modules
 yarn-error.log
 .byebug_history
+.env*
 TXT
 
   # Webpacker / Yarn
@@ -198,10 +194,9 @@ environment.plugins.prepend('Provide',
 JS
   end
 
-  # Figaro
+  # Dotenv
   ########################################
-  run 'bundle binstubs figaro'
-  run 'figaro install'
+  run 'touch .env'
 
   # Rubocop
   ########################################
