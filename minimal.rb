@@ -46,12 +46,6 @@ file 'Procfile', <<-YAML
 web: bundle exec puma -C config/puma.rb
 YAML
 
-# Spring conf file
-########################################
-inject_into_file 'config/spring.rb', before: ').each { |path| Spring.watch(path) }' do
-  '  config/application.yml\n'
-end
-
 # Assets
 ########################################
 run 'rm -rf app/assets/stylesheets'
@@ -156,10 +150,6 @@ after_bundle do
   ########################################
   route "root to: 'pages#home'"
 
-  # Dotenv
-  ########################################
-  file '.env'
-
   # Git ignore
   ########################################
   run 'rm .gitignore'
@@ -203,51 +193,13 @@ environment.plugins.prepend('Provide',
 JS
   end
 
+  # Dotenv
+  ########################################
+  run 'touch .env'
+
   # Rubocop
   ########################################
-  file '.rubocop.yml', <<-YML
-AllCops:
-  Exclude:
-    - 'bin/**/*'
-    - 'db/**/*'
-    - 'config/**/*'
-    - 'node_modules/**/*'
-    - 'script/**/*'
-    - 'support/**/*'
-    - 'tmp/**/*'
-    - 'test/**/*'
-
-ConditionalAssignment:
-  Enabled: false
-StringLiterals:
-  Enabled: false
-RedundantReturn:
-  Enabled: false
-Documentation:
-  Enabled: false
-WordArray:
-  Enabled: false
-AbcSize:
-  Enabled: false
-MutableConstant:
-  Enabled: false
-SignalException:
-  Enabled: false
-Casecmp:
-  Enabled: false
-CyclomaticComplexity:
-  Enabled: false
-MethodMissing:
-  Enabled: false
-Style/FrozenStringLiteralComment:
-  Enabled: false
-LineLength:
-  Max: 120
-Style/EmptyMethod:
-  Enabled: false
-Bundler/OrderedGems:
-  Enabled: false
-YML
+  run 'curl -L https://raw.githubusercontent.com/lewagon/rails-templates/master/.rubocop.yml > .rubocop.yml'
 
   # Git
   ########################################
