@@ -8,7 +8,6 @@ source 'https://rubygems.org'
 ruby '#{RUBY_VERSION}'
 
 #{"gem 'bootsnap', require: false" if Rails.version >= "5.2"}
-gem 'figaro'
 gem 'jbuilder', '~> 2.0'
 gem 'pg', '~> 0.21'
 gem 'puma'
@@ -33,6 +32,7 @@ group :development, :test do
   gem 'listen', '~> 3.0.5'
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
+  gem 'dotenv-rails'
 end
 RUBY
 
@@ -156,6 +156,10 @@ after_bundle do
   ########################################
   route "root to: 'pages#home'"
 
+  # Dotenv
+  ########################################
+  file '.env'
+
   # Git ignore
   ########################################
   run 'rm .gitignore'
@@ -174,6 +178,7 @@ public/packs-test
 node_modules
 yarn-error.log
 .byebug_history
+.env*
 TXT
 
   # Webpacker / Yarn
@@ -197,11 +202,6 @@ environment.plugins.prepend('Provide',
 
 JS
   end
-
-  # Figaro
-  ########################################
-  run 'bundle binstubs figaro'
-  run 'figaro install'
 
   # Rubocop
   ########################################
