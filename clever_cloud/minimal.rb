@@ -199,7 +199,7 @@ environment.plugins.prepend('Provide',
 JS
   end
 
-  # Dotenc
+  # Dotenv
   ########################################
   run 'touch .env'
 
