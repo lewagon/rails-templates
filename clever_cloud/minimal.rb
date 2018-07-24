@@ -8,7 +8,6 @@ source 'https://rubygems.org'
 ruby '#{RUBY_VERSION}'
 
 #{"gem 'bootsnap', require: false" if Rails.version >= "5.2"}
-gem 'figaro'
 gem 'jbuilder', '~> 2.0'
 gem 'pg', '~> 0.21'
 gem 'puma'
