@@ -33,6 +33,7 @@ group :development, :test do
   gem 'listen', '~> 3.0.5'
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
+  gem 'dotenv-rails'
 end
 RUBY
 
@@ -46,11 +47,6 @@ file 'Procfile', <<-YAML
 web: bundle exec puma -C config/puma.rb
 YAML
 
-# Spring conf file
-########################################
-inject_into_file 'config/spring.rb', before: ').each { |path| Spring.watch(path) }' do
-  '  config/application.yml\n'
-end
 
 # Clevercloud conf file
 ########################################
@@ -178,6 +174,7 @@ public/packs-test
 node_modules
 yarn-error.log
 .byebug_history
+.env*
 TXT
 
   # Webpacker / Yarn
@@ -202,24 +199,9 @@ environment.plugins.prepend('Provide',
 JS
   end
 
-  # Figaro
+  # Dotenc
   ########################################
-  run 'bundle binstubs figaro'
-  run 'figaro install'
-  inside 'config' do
-    figaro_yml = <<-EOF
-production:
-  # rails
-  RAILS_ENV: "production"
-  SECRET_KEY_BASE: "#{SecureRandom.hex(64)}"
-  # clever cloud
-  STATIC_FILES_PATH: "/public/"
-  CACHE_DEPENDENCIES: "true" # disable it when going live
-  CC_RACKUP_SERVER: "puma"
-  PORT: "8080"
-EOF
-    file 'application.yml', figaro_yml, force: true
-  end
+  run 'touch .env'
 
   # Rubocop
   run 'curl -L https://raw.githubusercontent.com/lewagon/rails-templates/master/.rubocop.yml > .rubocop.yml'
