@@ -90,19 +90,19 @@ HTML
 
 file 'app/views/shared/_flashes.html.erb', <<-HTML
 <% if notice %>
-  <div class="flash flash-success alert alert-dismissible fade show" role="alert">
-    <span><%= notice %></span>
-    <a data-dismiss="alert" aria-label="Close">
-      <i class="fas fa-times"></i>
-    </a>
+  <div class="alert alert-info alert-dismissible fade show m-1" role="alert">
+    <%= notice %>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
   </div>
 <% end %>
 <% if alert %>
-  <div class="flash flash-danger alert alert-dismissible fade show" role="alert">
-    <span><%= alert %></span>
-    <a data-dismiss="alert" aria-label="Close">
-      <i class="fas fa-times"></i>
-    </a>
+  <div class="alert alert-warning alert-dismissible fade show m-1" role="alert">
+    <%= alert %>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
   </div>
 <% end %>
 HTML
