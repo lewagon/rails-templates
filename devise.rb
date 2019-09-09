@@ -145,7 +145,6 @@ after_bundle do
 
   # Git ignore
   ########################################
-  run 'rm .gitignore'
   inject_into_file '.gitignore' do
   <<-TXT
 
