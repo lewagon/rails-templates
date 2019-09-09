@@ -145,15 +145,15 @@ after_bundle do
 
   # Git ignore
   ########################################
-  inject_into_file '.gitignore' do
+  append_file '.gitignore' do
   <<-TXT
 
-    # Ignore .env file containing credentials.
-    .env*
+# Ignore .env file containing credentials.
+.env*
 
-    # Ignore Mac and Linux file system files
-    *.swp
-    .DS_Store
+# Ignore Mac and Linux file system files
+*.swp
+.DS_Store
   TXT
   end
 
