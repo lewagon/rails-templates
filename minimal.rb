@@ -120,23 +120,14 @@ after_bundle do
 
   # Git ignore
   ########################################
-  run 'rm .gitignore'
-  file '.gitignore', <<-TXT
-.bundle
-log/*.log
-tmp/**/*
-tmp/*
-!log/.keep
-!tmp/.keep
+  append_file '.gitignore', <<-TXT
+
+# Ignore .env file containing credentials.
+.env*
+
+# Ignore Mac and Linux file system files
 *.swp
 .DS_Store
-public/assets
-public/packs
-public/packs-test
-node_modules
-yarn-error.log
-.byebug_history
-.env*
 TXT
 
   # Webpacker / Yarn

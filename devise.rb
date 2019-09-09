@@ -145,8 +145,7 @@ after_bundle do
 
   # Git ignore
   ########################################
-  append_file '.gitignore' do
-  <<-TXT
+  append_file '.gitignore', <<-TXT
 
 # Ignore .env file containing credentials.
 .env*
@@ -154,8 +153,7 @@ after_bundle do
 # Ignore Mac and Linux file system files
 *.swp
 .DS_Store
-  TXT
-  end
+TXT
 
   # Devise install + user
   ########################################
