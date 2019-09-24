@@ -96,10 +96,10 @@ file 'README.md', markdown_file_content, force: true
 ########################################
 generators = <<-RUBY
 config.generators do |generate|
-      generate.assets false
-      generate.helper false
-      generate.test_framework  :test_unit, fixture: false
-    end
+  generate.assets false
+  generate.helper false
+  generate.test_framework  :test_unit, fixture: false
+end
 RUBY
 
 environment generators
