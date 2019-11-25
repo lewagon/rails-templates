@@ -165,7 +165,6 @@ TXT
   run 'rm app/controllers/application_controller.rb'
   file 'app/controllers/application_controller.rb', <<-RUBY
 class ApplicationController < ActionController::Base
-  protect_from_forgery with: :exception
   before_action :authenticate_user!
 end
 RUBY
