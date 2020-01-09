@@ -134,10 +134,19 @@ TXT
   run 'yarn add popper.js jquery bootstrap'
   file 'app/javascript/packs/application.js', <<-JS
 import "bootstrap";
-JS
+  JS
+
+  if Rails.version >= "6"
+    prepend_file 'app/javascript/packs/application.js', <<-JS
+require("@rails/ujs").start()
+require("@rails/activestorage").start()
+require("channels")
+
+    JS
+  end
 
   inject_into_file 'config/webpack/environment.js', before: 'module.exports' do
-<<-JS
+  <<-JS
 const webpack = require('webpack')
 
 // Preventing Babel from transpiling NodeModules packages
