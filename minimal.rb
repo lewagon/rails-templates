@@ -14,9 +14,9 @@ end
 inject_into_file 'Gemfile', after: 'group :development, :test do' do
   <<-RUBY
 
-gem 'pry-byebug'
-gem 'pry-rails'
-gem 'dotenv-rails'
+  gem 'pry-byebug'
+  gem 'pry-rails'
+  gem 'dotenv-rails'
   RUBY
 end
 
@@ -57,7 +57,8 @@ end
 gsub_file('app/views/layouts/application.html.erb', "<%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>", "<%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload', defer: true %>")
 inject_into_file 'app/views/layouts/application.html.erb', after: "<%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>" do
   <<-HTML
-      <%#= stylesheet_pack_tag 'application', media: 'all' %>
+
+      <%#= stylesheet_pack_tag 'application', media: 'all' %><!-- Uncomment if you import CSS in app/javascript/packs/application.js -->
   HTML
 end
 
@@ -74,7 +75,7 @@ generators = <<-RUBY
 config.generators do |generate|
   generate.assets false
   generate.helper false
-  generate.test_framework  :test_unit, fixture: false
+  generate.test_framework :test_unit, fixture: false
 end
 RUBY
 
