@@ -87,11 +87,13 @@ run 'rm -rf vendor'
 run 'curl -L https://github.com/lewagon/stylesheets/archive/master.zip > stylesheets.zip'
 run 'unzip stylesheets.zip -d app/assets && rm stylesheets.zip && mv app/assets/rails-stylesheets-master app/assets/stylesheets'
 
-run 'rm app/assets/javascripts/application.js'
-file 'app/assets/javascripts/application.js', <<-JS
-//= require rails-ujs
-//= require_tree .
-JS
+if Rails.version < 6
+  run 'rm app/assets/javascripts/application.js'
+  file 'app/assets/javascripts/application.js', <<-JS
+  //= require rails-ujs
+  //= require_tree .
+  JS
+end
 
 # Dev environment
 ########################################
