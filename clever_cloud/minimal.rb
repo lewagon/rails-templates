@@ -87,7 +87,7 @@ run 'rm -rf vendor'
 run 'curl -L https://github.com/lewagon/stylesheets/archive/master.zip > stylesheets.zip'
 run 'unzip stylesheets.zip -d app/assets && rm stylesheets.zip && mv app/assets/rails-stylesheets-master app/assets/stylesheets'
 
-if Rails.version < 6
+if Rails.version < "6"
   run 'rm app/assets/javascripts/application.js'
   file 'app/assets/javascripts/application.js', <<-JS
 //= require rails-ujs
@@ -116,7 +116,7 @@ file 'app/views/layouts/application.html.erb', <<-HTML
   </head>
   <body>
     <%= yield %>
-#{"    <%= javascript_include_tag 'application' %>\n" if Rails.version < 6}
+#{"    <%= javascript_include_tag 'application' %>\n" if Rails.version < "6"}
     <%= javascript_pack_tag 'application' %>
   </body>
 </html>
