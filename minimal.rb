@@ -110,7 +110,12 @@ after_bundle do
   # Webpacker / Yarn
   ########################################
   run 'yarn add popper.js jquery bootstrap'
-  prepend_file 'app/javascript/packs/application.js', <<-JS
+  append_file 'app/javascript/packs/application.js', <<-JS
+// ----------------------------------------------------
+// Note(lewagon): ABOVE IS RAILS DEFAULT CONFIGURATION
+// WRITE YOUR OWN JS STARTING FROM HERE 👇
+// ----------------------------------------------------
+
 import "bootstrap";
   JS
 
