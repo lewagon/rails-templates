@@ -4,17 +4,19 @@ run 'pgrep spring | xargs kill -9'
 ########################################
 inject_into_file 'Gemfile', before: 'group :development, :test do' do
   <<-RUBY
-    gem 'autoprefixer-rails'
-    gem 'font-awesome-sass'
-    gem 'simple_form'
+gem 'autoprefixer-rails'
+gem 'font-awesome-sass'
+gem 'simple_form'
+
   RUBY
 end
 
 inject_into_file 'Gemfile', after: 'group :development, :test do' do
   <<-RUBY
-    gem 'pry-byebug'
-    gem 'pry-rails'
-    gem 'dotenv-rails'
+
+gem 'pry-byebug'
+gem 'pry-rails'
+gem 'dotenv-rails'
   RUBY
 end
 
@@ -53,9 +55,9 @@ if Rails.version < "6"
   gsub_file('app/views/layouts/application.html.erb', "<%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>", scripts)
 end
 gsub_file('app/views/layouts/application.html.erb', "<%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>", "<%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload', defer: true %>")
-inject_into_file 'app/views/layouts/application.html.erb', after: "<%= stylesheet_link_tag 'application', media: 'all' %>" do
+inject_into_file 'app/views/layouts/application.html.erb', after: "<%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>" do
   <<-HTML
-    <%#= stylesheet_pack_tag 'application', media: 'all' %>
+      <%#= stylesheet_pack_tag 'application', media: 'all' %>
   HTML
 end
 
@@ -96,36 +98,37 @@ after_bundle do
   ########################################
   append_file '.gitignore', <<-TXT
 
-    # Ignore .env file containing credentials.
-    .env*
+# Ignore .env file containing credentials.
+.env*
 
-    # Ignore Mac and Linux file system files
-    *.swp
-    .DS_Store
+# Ignore Mac and Linux file system files
+*.swp
+.DS_Store
   TXT
 
   # Webpacker / Yarn
   ########################################
   run 'yarn add popper.js jquery bootstrap'
   prepend_file 'app/javascript/packs/application.js', <<-JS
-    import "bootstrap";
+import "bootstrap";
   JS
 
   inject_into_file 'config/webpack/environment.js', before: 'module.exports' do
     <<-JS
-      const webpack = require('webpack');
+const webpack = require('webpack');
 
-      // Preventing Babel from transpiling NodeModules packages
-      environment.loaders.delete('nodeModules');
+// Preventing Babel from transpiling NodeModules packages
+environment.loaders.delete('nodeModules');
 
-      // Bootstrap 4 has a dependency over jQuery & Popper.js:
-      environment.plugins.prepend('Provide',
-        new webpack.ProvidePlugin({
-          $: 'jquery',
-          jQuery: 'jquery',
-          Popper: ['popper.js', 'default']
-        })
-      );
+// Bootstrap 4 has a dependency over jQuery & Popper.js:
+environment.plugins.prepend('Provide',
+  new webpack.ProvidePlugin({
+    $: 'jquery',
+    jQuery: 'jquery',
+    Popper: ['popper.js', 'default']
+  })
+);
+
     JS
   end
 
