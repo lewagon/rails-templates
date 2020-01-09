@@ -173,9 +173,9 @@ JS
 
   if Rails.version >= "6"
     prepend_file 'app/javascript/packs/application.js', <<-JS
-  require("@rails/ujs").start()
-  require("@rails/activestorage").start()
-  require("channels")
+require("@rails/ujs").start()
+require("@rails/activestorage").start()
+require("channels")
 
     JS
   end
