@@ -23,7 +23,7 @@ end
 # Procfile
 ########################################
 file 'Procfile', <<-YAML
-  web: bundle exec puma -C config/puma.rb
+web: bundle exec puma -C config/puma.rb
 YAML
 
 # Assets
@@ -36,8 +36,8 @@ run 'unzip stylesheets.zip -d app/assets && rm stylesheets.zip && mv app/assets/
 if Rails.version < "6"
   run 'rm app/assets/javascripts/application.js'
   file 'app/assets/javascripts/application.js', <<-JS
-    //= require rails-ujs
-    //= require_tree .
+//= require rails-ujs
+//= require_tree .
   JS
 end
 
@@ -64,18 +64,18 @@ end
 # README
 ########################################
 markdown_file_content = <<-MARKDOWN
-  Rails app generated with [lewagon/rails-templates](https://github.com/lewagon/rails-templates), created by the [Le Wagon coding bootcamp](https://www.lewagon.com) team.
+Rails app generated with [lewagon/rails-templates](https://github.com/lewagon/rails-templates), created by the [Le Wagon coding bootcamp](https://www.lewagon.com) team.
 MARKDOWN
 file 'README.md', markdown_file_content, force: true
 
 # Generators
 ########################################
 generators = <<-RUBY
-  config.generators do |generate|
-    generate.assets false
-    generate.helper false
-    generate.test_framework  :test_unit, fixture: false
-  end
+config.generators do |generate|
+  generate.assets false
+  generate.helper false
+  generate.test_framework  :test_unit, fixture: false
+end
 RUBY
 
 environment generators
