@@ -18,10 +18,6 @@ inject_into_file 'Gemfile', after: 'group :development, :test do' do
   RUBY
 end
 
-# Ruby version
-########################################
-file '.ruby-version', RUBY_VERSION
-
 # Procfile
 ########################################
 file 'Procfile', <<-YAML
