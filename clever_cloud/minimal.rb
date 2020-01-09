@@ -35,10 +35,6 @@ group :development, :test do
 end
 RUBY
 
-# Ruby version
-########################################
-file '.ruby-version', RUBY_VERSION
-
 # Procfile
 ########################################
 file 'Procfile', <<-YAML
