@@ -36,10 +36,6 @@ group :development, :test do
 end
 RUBY
 
-# Ruby version
-########################################
-file '.ruby-version', RUBY_VERSION
-
 # Procfile
 ########################################
 file 'Procfile', <<-YAML
@@ -87,11 +83,13 @@ run 'rm -rf vendor'
 run 'curl -L https://github.com/lewagon/stylesheets/archive/master.zip > stylesheets.zip'
 run 'unzip stylesheets.zip -d app/assets && rm stylesheets.zip && mv app/assets/rails-stylesheets-master app/assets/stylesheets'
 
-run 'rm app/assets/javascripts/application.js'
-file 'app/assets/javascripts/application.js', <<-JS
+if Rails.version < "6"
+  run 'rm app/assets/javascripts/application.js'
+  file 'app/assets/javascripts/application.js', <<-JS
 //= require rails-ujs
 //= require_tree .
-JS
+  JS
+end
 
 # Dev environment
 ########################################
@@ -116,7 +114,7 @@ file 'app/views/layouts/application.html.erb', <<-HTML
     <%= render 'shared/navbar' %>
     <%= render 'shared/flashes' %>
     <%= yield %>
-    <%= javascript_include_tag 'application' %>
+#{"    <%= javascript_include_tag 'application' %>\n" if Rails.version < "6"}
     <%= javascript_pack_tag 'application' %>
   </body>
 </html>
@@ -219,7 +217,7 @@ class PagesController < ApplicationController
   def home
   end
 end
-RUBY
+  RUBY
 
   # Environments
   ########################################
@@ -232,10 +230,19 @@ RUBY
   run 'yarn add popper.js jquery bootstrap'
   file 'app/javascript/packs/application.js', <<-JS
 import "bootstrap";
-JS
+  JS
+
+  if Rails.version >= "6"
+    prepend_file 'app/javascript/packs/application.js', <<-JS
+require("@rails/ujs").start()
+require("@rails/activestorage").start()
+require("channels")
+
+    JS
+  end
 
   inject_into_file 'config/webpack/environment.js', before: 'module.exports' do
-<<-JS
+  <<-JS
 const webpack = require('webpack')
 
 // Preventing Babel from transpiling NodeModules packages
