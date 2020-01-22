@@ -1,4 +1,4 @@
-run 'pkill -9 -f "spring"'
+run 'pkill -9 -f spring'
 
 # GEMFILE
 ########################################
