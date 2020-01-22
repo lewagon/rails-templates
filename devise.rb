@@ -1,4 +1,4 @@
-run "[[ `uname` =~ 'Darwin' ]] && pgrep spring | xargs kill -9"
+run "if uname | grep -q 'Darwin'; then pgrep spring | xargs kill -9; fi"
 
 # GEMFILE
 ########################################
