@@ -1,4 +1,4 @@
-run 'pgrep -f spring | xargs kill -9'
+run 'pgrep spring | xargs kill -9'
 
 # GEMFILE
 ########################################
