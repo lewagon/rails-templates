@@ -1,4 +1,4 @@
-[[ `uname` =~ 'Darwin' ]] && run 'pgrep spring | xargs kill -9'
+run '[[ `uname` =~ 'Darwin' ]] && pgrep spring | xargs kill -9'
 
 # GEMFILE
 ########################################
