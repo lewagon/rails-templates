@@ -69,7 +69,7 @@ run 'curl -L https://github.com/lewagon/awesome-navbars/raw/master/templates/_na
 run 'curl -L https://raw.githubusercontent.com/lewagon/rails-templates/master/logo.png > app/assets/images/logo.png'
 
 inject_into_file 'app/views/layouts/application.html.erb', after: '<body>' do
-  <<~HTML
+  <<-HTML
 
     <%= render 'shared/navbar' %>
     <%= render 'shared/flashes' %>
@@ -129,8 +129,7 @@ after_bundle do
   run 'rm app/controllers/application_controller.rb'
   file 'app/controllers/application_controller.rb', <<~RUBY
     class ApplicationController < ActionController::Base
-    #{  "protect_from_forgery with: :exception\n" if Rails.version < "5.2"}
-      before_action :authenticate_user!
+    #{  "protect_from_forgery with: :exception\n" if Rails.version < "5.2"}  before_action :authenticate_user!
     end
   RUBY
 
