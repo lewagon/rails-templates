@@ -96,6 +96,8 @@ after_bundle do
   ########################################
   run 'yarn add popper.js jquery bootstrap'
   append_file 'app/javascript/packs/application.js', <<~JS
+  
+  
     // ----------------------------------------------------
     // Note(lewagon): ABOVE IS RAILS DEFAULT CONFIGURATION
     // WRITE YOUR OWN JS STARTING FROM HERE 👇
