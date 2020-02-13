@@ -11,7 +11,6 @@ Get a minimal rails 5.1+ app ready to be deployed on Heroku with Bootstrap, Simp
 ```bash
 rails new \
   --database postgresql \
-  --webpack \
   -m https://raw.githubusercontent.com/lewagon/rails-templates/rails-six/minimal.rb \
   CHANGE_THIS_TO_YOUR_RAILS_APP_NAME
 ```
@@ -23,7 +22,6 @@ Same as minimal **plus** a Devise install with a generated `User` model.
 ```bash
 rails new \
   --database postgresql \
-  --webpack \
   -m https://raw.githubusercontent.com/lewagon/rails-templates/rails-six/devise.rb \
   CHANGE_THIS_TO_YOUR_RAILS_APP_NAME
 ```
