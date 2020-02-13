@@ -4,7 +4,6 @@ run 'pgrep spring | xargs kill -9'
 ########################################
 inject_into_file 'Gemfile', before: 'group :development, :test do' do
   <<~RUBY
-    #{"gem 'bootsnap', require: false" if Rails.version >= "5.2"}
     gem 'devise'
   
     gem 'autoprefixer-rails'
