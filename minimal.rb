@@ -1,4 +1,4 @@
-run 'pgrep spring | xargs kill -9'
+run "if uname | grep -q 'Darwin'; then pgrep spring | xargs kill -9; fi"
 
 # GEMFILE
 ########################################
@@ -96,8 +96,8 @@ after_bundle do
   ########################################
   run 'yarn add popper.js jquery bootstrap'
   append_file 'app/javascript/packs/application.js', <<~JS
-  
-  
+
+
     // ----------------------------------------------------
     // Note(lewagon): ABOVE IS RAILS DEFAULT CONFIGURATION
     // WRITE YOUR OWN JS STARTING FROM HERE 👇
