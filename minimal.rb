@@ -38,7 +38,7 @@ RUBY
 # Procfile
 ########################################
 file 'Procfile', <<-YAML
-web: bundle exec puma -C config/puma.rb
+web:bundle exec puma -C config/puma.rb
 YAML
 
 # Assets
