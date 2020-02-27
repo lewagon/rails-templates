@@ -48,7 +48,7 @@ if Rails.version < "6"
 end
 gsub_file('app/views/layouts/application.html.erb', "<%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>", "<%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload', defer: true %>")
 style = <<~HTML
-  <meta name=“viewport” content=“width=device-width, initial-scale=1, shrink-to-fit=no”>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
       <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
 HTML
 gsub_file('app/views/layouts/application.html.erb', "<%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>", style)
