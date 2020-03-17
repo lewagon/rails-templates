@@ -55,7 +55,6 @@ style = <<~HTML
       <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
 HTML
 gsub_file('app/views/layouts/application.html.erb', "<%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>", style)
->>>>>>> 50f737089b1621f4df870cb1656877e78738b911
 
 # README
 ########################################
