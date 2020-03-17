@@ -1,4 +1,4 @@
-run 'pgrep spring | xargs kill -9'
+run "if uname | grep -q 'Darwin'; then pgrep spring | xargs kill -9; fi"
 
 # GEMFILE
 ########################################
@@ -49,6 +49,14 @@ else
   gsub_file('app/views/layouts/application.html.erb', "<%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>", "<%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload', defer: true %>")
 end
 
+gsub_file('app/views/layouts/application.html.erb', "<%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>", "<%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload', defer: true %>")
+style = <<~HTML
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+HTML
+gsub_file('app/views/layouts/application.html.erb', "<%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>", style)
+>>>>>>> 50f737089b1621f4df870cb1656877e78738b911
+
 # README
 ########################################
 markdown_file_content = <<~MARKDOWN
@@ -97,6 +105,8 @@ after_bundle do
   ########################################
   run 'yarn add popper.js jquery bootstrap'
   append_file 'app/javascript/packs/application.js', <<~JS
+
+
     // ----------------------------------------------------
     // Note(lewagon): ABOVE IS RAILS DEFAULT CONFIGURATION
     // WRITE YOUR OWN JS STARTING FROM HERE 👇
