@@ -36,12 +36,6 @@ group :development, :test do
 end
 RUBY
 
-# Procfile
-########################################
-file 'Procfile', <<-YAML
-web: bundle exec puma -C config/puma.rb
-YAML
-
 # Assets
 ########################################
 run 'rm -rf app/assets/stylesheets'
@@ -239,6 +233,4 @@ JS
   git add: '.'
   git commit: "-m 'Initial commit with devise template from https://github.com/lewagon/rails-templates'"
 
-  # Fix puma config
-  gsub_file('config/puma.rb', 'pidfile ENV.fetch("PIDFILE") { "tmp/pids/server.pid" }', '# pidfile ENV.fetch("PIDFILE") { "tmp/pids/server.pid" }')
 end
