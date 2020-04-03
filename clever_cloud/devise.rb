@@ -16,7 +16,7 @@ gem 'rails', '#{Rails.version}'
 gem 'redis'
 
 gem 'autoprefixer-rails'
-gem 'font-awesome-sass', '~> 5.6.1'
+gem 'font-awesome-sass', '~> 5.12.0'
 gem 'sassc-rails'
 gem 'simple_form'
 gem 'uglifier'
@@ -35,12 +35,6 @@ group :development, :test do
   gem 'dotenv-rails'
 end
 RUBY
-
-# Procfile
-########################################
-file 'Procfile', <<-YAML
-web: bundle exec puma -C config/puma.rb
-YAML
 
 # Clevercloud conf file
 ########################################
@@ -273,7 +267,4 @@ JS
   git :init
   git add: '.'
   git commit: "-m 'Initial commit with devise template from https://github.com/lewagon/rails-templates'"
-
-  # Fix puma config
-  gsub_file('config/puma.rb', 'pidfile ENV.fetch("PIDFILE") { "tmp/pids/server.pid" }', '# pidfile ENV.fetch("PIDFILE") { "tmp/pids/server.pid" }')
 end
