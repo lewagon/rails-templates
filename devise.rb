@@ -2,39 +2,25 @@ run "if uname | grep -q 'Darwin'; then pgrep spring | xargs kill -9; fi"
 
 # GEMFILE
 ########################################
-run 'rm Gemfile'
-file 'Gemfile', <<-RUBY
-source 'https://rubygems.org'
-ruby '#{RUBY_VERSION}'
+inject_into_file 'Gemfile', before: 'group :development, :test do' do
+  <<~RUBY
+    gem 'devise'
 
-#{"gem 'bootsnap', require: false" if Rails.version >= "5.2"}
-gem 'devise'
-gem 'jbuilder', '~> 2.0'
-gem 'pg', '~> 0.21'
-gem 'puma'
-gem 'rails', '#{Rails.version}'
-gem 'redis'
-
-gem 'autoprefixer-rails'
-gem 'font-awesome-sass', '~> 5.12.0'
-gem 'sassc-rails'
-gem 'simple_form'
-gem 'uglifier'
-gem 'webpacker'
-
-group :development do
-  gem 'web-console', '>= 3.3.0'
+    gem 'autoprefixer-rails'
+    gem 'font-awesome-sass'
+    gem 'simple_form'
+  RUBY
 end
 
-group :development, :test do
+inject_into_file 'Gemfile', after: 'group :development, :test do' do
+  <<-RUBY
   gem 'pry-byebug'
   gem 'pry-rails'
-  gem 'listen', '~> 3.0.5'
-  gem 'spring'
-  gem 'spring-watcher-listen', '~> 2.0.0'
   gem 'dotenv-rails'
+  RUBY
 end
-RUBY
+
+gsub_file('Gemfile', /# gem 'redis'/, "gem 'redis'")
 
 # Assets
 ########################################
@@ -43,64 +29,57 @@ run 'rm -rf vendor'
 run 'curl -L https://github.com/lewagon/stylesheets/archive/master.zip > stylesheets.zip'
 run 'unzip stylesheets.zip -d app/assets && rm stylesheets.zip && mv app/assets/rails-stylesheets-master app/assets/stylesheets'
 
-if Rails.version < "6"
-  run 'rm app/assets/javascripts/application.js'
-  file 'app/assets/javascripts/application.js', <<-JS
-//= require rails-ujs
-//= require_tree .
-  JS
-end
-
 # Dev environment
 ########################################
 gsub_file('config/environments/development.rb', /config\.assets\.debug.*/, 'config.assets.debug = false')
 
 # Layout
 ########################################
-run 'rm app/views/layouts/application.html.erb'
-file 'app/views/layouts/application.html.erb', <<-HTML
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>TODO</title>
-    <%= csrf_meta_tags %>
-    <%= action_cable_meta_tag %>
-    <%= stylesheet_link_tag 'application', media: 'all' %>
-    <%#= stylesheet_pack_tag 'application', media: 'all' %> <!-- Uncomment if you import CSS in app/javascript/packs/application.js -->
-  </head>
-  <body>
-    <%= render 'shared/navbar' %>
-    <%= render 'shared/flashes' %>
-    <%= yield %>
-#{"    <%= javascript_include_tag 'application' %>\n" if Rails.version < "6"}
-    <%= javascript_pack_tag 'application' %>
-  </body>
-</html>
+if Rails.version < "6"
+  scripts = <<~HTML
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload', defer: true %>
+        <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+  HTML
+  gsub_file('app/views/layouts/application.html.erb', "<%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>", scripts)
+end
+gsub_file('app/views/layouts/application.html.erb', "<%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>", "<%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload', defer: true %>")
+style = <<~HTML
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
 HTML
+gsub_file('app/views/layouts/application.html.erb', "<%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>", style)
 
-file 'app/views/shared/_flashes.html.erb', <<-HTML
-<% if notice %>
-  <div class="alert alert-info alert-dismissible fade show m-1" role="alert">
-    <%= notice %>
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-<% end %>
-<% if alert %>
-  <div class="alert alert-warning alert-dismissible fade show m-1" role="alert">
-    <%= alert %>
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-<% end %>
+# Flashes
+########################################
+file 'app/views/shared/_flashes.html.erb', <<~HTML
+  <% if notice %>
+    <div class="alert alert-info alert-dismissible fade show m-1" role="alert">
+      <%= notice %>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  <% end %>
+  <% if alert %>
+    <div class="alert alert-warning alert-dismissible fade show m-1" role="alert">
+      <%= alert %>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  <% end %>
 HTML
 
 run 'curl -L https://github.com/lewagon/awesome-navbars/raw/master/templates/_navbar_wagon.html.erb > app/views/shared/_navbar.html.erb'
 run 'curl -L https://raw.githubusercontent.com/lewagon/rails-templates/master/logo.png > app/assets/images/logo.png'
+
+inject_into_file 'app/views/layouts/application.html.erb', after: '<body>' do
+  <<-HTML
+
+    <%= render 'shared/navbar' %>
+    <%= render 'shared/flashes' %>
+  HTML
+end
 
 # README
 ########################################
@@ -111,12 +90,12 @@ file 'README.md', markdown_file_content, force: true
 
 # Generators
 ########################################
-generators = <<-RUBY
-config.generators do |generate|
-  generate.assets false
-  generate.helper false
-  generate.test_framework  :test_unit, fixture: false
-end
+generators = <<~RUBY
+  config.generators do |generate|
+    generate.assets false
+    generate.helper false
+    generate.test_framework :test_unit, fixture: false
+  end
 RUBY
 
 environment generators
@@ -137,15 +116,13 @@ after_bundle do
 
   # Git ignore
   ########################################
-  append_file '.gitignore', <<-TXT
-
-# Ignore .env file containing credentials.
-.env*
-
-# Ignore Mac and Linux file system files
-*.swp
-.DS_Store
-TXT
+  append_file '.gitignore', <<~TXT
+    # Ignore .env file containing credentials.
+    .env*
+    # Ignore Mac and Linux file system files
+    *.swp
+    .DS_Store
+  TXT
 
   # Devise install + user
   ########################################
@@ -155,11 +132,11 @@ TXT
   # App controller
   ########################################
   run 'rm app/controllers/application_controller.rb'
-  file 'app/controllers/application_controller.rb', <<-RUBY
-class ApplicationController < ActionController::Base
-#{"  protect_from_forgery with: :exception\n" if Rails.version < "5.2"}  before_action :authenticate_user!
-end
-RUBY
+  file 'app/controllers/application_controller.rb', <<~RUBY
+    class ApplicationController < ActionController::Base
+    #{  "protect_from_forgery with: :exception\n" if Rails.version < "5.2"}  before_action :authenticate_user!
+    end
+  RUBY
 
   # migrate + devise views
   ########################################
@@ -169,14 +146,14 @@ RUBY
   # Pages Controller
   ########################################
   run 'rm app/controllers/pages_controller.rb'
-  file 'app/controllers/pages_controller.rb', <<-RUBY
-class PagesController < ApplicationController
-  skip_before_action :authenticate_user!, only: [:home]
+  file 'app/controllers/pages_controller.rb', <<~RUBY
+    class PagesController < ApplicationController
+      skip_before_action :authenticate_user!, only: [ :home ]
 
-  def home
-  end
-end
-RUBY
+      def home
+      end
+    end
+  RUBY
 
   # Environments
   ########################################
@@ -185,38 +162,41 @@ RUBY
 
   # Webpacker / Yarn
   ########################################
-  run 'rm app/javascript/packs/application.js'
   run 'yarn add popper.js jquery bootstrap'
-  file 'app/javascript/packs/application.js', <<-JS
-import "bootstrap";
+  append_file 'app/javascript/packs/application.js', <<~JS
+
+
+    // ----------------------------------------------------
+    // Note(lewagon): ABOVE IS RAILS DEFAULT CONFIGURATION
+    // WRITE YOUR OWN JS STARTING FROM HERE 👇
+    // ----------------------------------------------------
+
+    // External imports
+    import "bootstrap";
+
+    // Internal imports, e.g:
+    // import { initSelect2 } from '../components/init_select2';
+
+    document.addEventListener('turbolinks:load', () => {
+      // Call your functions here, e.g:
+      // initSelect2();
+    });
   JS
 
-  if Rails.version >= "6"
-    prepend_file 'app/javascript/packs/application.js', <<-JS
-require("@rails/ujs").start()
-require("@rails/activestorage").start()
-require("channels")
-
-    JS
-  end
-
   inject_into_file 'config/webpack/environment.js', before: 'module.exports' do
-  <<-JS
-const webpack = require('webpack')
-
-// Preventing Babel from transpiling NodeModules packages
-environment.loaders.delete('nodeModules');
-
-// Bootstrap 4 has a dependency over jQuery & Popper.js:
-environment.plugins.prepend('Provide',
-  new webpack.ProvidePlugin({
-    $: 'jquery',
-    jQuery: 'jquery',
-    Popper: ['popper.js', 'default']
-  })
-)
-
-JS
+    <<~JS
+      const webpack = require('webpack');
+      // Preventing Babel from transpiling NodeModules packages
+      environment.loaders.delete('nodeModules');
+      // Bootstrap 4 has a dependency over jQuery & Popper.js:
+      environment.plugins.prepend('Provide',
+        new webpack.ProvidePlugin({
+          $: 'jquery',
+          jQuery: 'jquery',
+          Popper: ['popper.js', 'default']
+        })
+      );
+    JS
   end
 
   # Dotenv
@@ -229,8 +209,9 @@ JS
 
   # Git
   ########################################
-  git :init
   git add: '.'
   git commit: "-m 'Initial commit with devise template from https://github.com/lewagon/rails-templates'"
 
+  # Fix puma config
+  gsub_file('config/puma.rb', 'pidfile ENV.fetch("PIDFILE") { "tmp/pids/server.pid" }', '# pidfile ENV.fetch("PIDFILE") { "tmp/pids/server.pid" }')
 end

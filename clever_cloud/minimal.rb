@@ -2,38 +2,23 @@ run "if uname | grep -q 'Darwin'; then pgrep spring | xargs kill -9; fi"
 
 # GEMFILE
 ########################################
-run 'rm Gemfile'
-file 'Gemfile', <<-RUBY
-source 'https://rubygems.org'
-ruby '#{RUBY_VERSION}'
+inject_into_file 'Gemfile', before: 'group :development, :test do' do
+  <<~RUBY
+    gem 'autoprefixer-rails'
+    gem 'font-awesome-sass'
+    gem 'simple_form'
 
-#{"gem 'bootsnap', require: false" if Rails.version >= "5.2"}
-gem 'jbuilder', '~> 2.0'
-gem 'pg', '~> 0.21'
-gem 'puma'
-gem 'rails', '#{Rails.version}'
-gem 'redis'
-
-gem 'autoprefixer-rails'
-gem 'font-awesome-sass', '~> 5.12.0'
-gem 'sassc-rails'
-gem 'simple_form'
-gem 'uglifier'
-gem 'webpacker'
-
-group :development do
-  gem 'web-console', '>= 3.3.0'
+  RUBY
 end
 
-group :development, :test do
+inject_into_file 'Gemfile', after: 'group :development, :test do' do
+  <<-RUBY
+
   gem 'pry-byebug'
   gem 'pry-rails'
-  gem 'listen', '~> 3.0.5'
-  gem 'spring'
-  gem 'spring-watcher-listen', '~> 2.0.0'
   gem 'dotenv-rails'
+  RUBY
 end
-RUBY
 
 # Clevercloud conf file
 ########################################
@@ -47,27 +32,13 @@ EOF
 
 # Database conf file
 ########################################
-inside 'config' do
-  database_conf = <<-EOF
-default: &default
-  adapter: postgresql
-  encoding: unicode
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-
-development:
-  <<: *default
-  database: #{app_name}_development
-
-test:
-  <<: *default
-  database: #{app_name}_test
-
-production:
-  <<: *default
-  url: <%= ENV['POSTGRESQL_ADDON_URI'] %>
+db_production_conf = <<~EOF
+  production:
+    <<: *default
+    url: <%= ENV['POSTGRESQL_ADDON_URI'] %>
 EOF
-  file 'database.yml', database_conf, force: true
-end
+
+gsub_file('config/database.yml', /^production:.*\z/m, db_production_conf)
 
 # Assets
 ########################################
@@ -76,56 +47,44 @@ run 'rm -rf vendor'
 run 'curl -L https://github.com/lewagon/stylesheets/archive/master.zip > stylesheets.zip'
 run 'unzip stylesheets.zip -d app/assets && rm stylesheets.zip && mv app/assets/rails-stylesheets-master app/assets/stylesheets'
 
-if Rails.version < "6"
-  run 'rm app/assets/javascripts/application.js'
-  file 'app/assets/javascripts/application.js', <<-JS
-//= require rails-ujs
-//= require_tree .
-  JS
-end
-
 # Dev environment
 ########################################
 gsub_file('config/environments/development.rb', /config\.assets\.debug.*/, 'config.assets.debug = false')
 
 # Layout
 ########################################
-run 'rm app/views/layouts/application.html.erb'
-file 'app/views/layouts/application.html.erb', <<-HTML
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>TODO</title>
-    <%= csrf_meta_tags %>
-    <%= action_cable_meta_tag %>
-    <%= stylesheet_link_tag 'application', media: 'all' %>
-    <%#= stylesheet_pack_tag 'application', media: 'all' %> <!-- Uncomment if you import CSS in app/javascript/packs/application.js -->
-  </head>
-  <body>
-    <%= yield %>
-#{"    <%= javascript_include_tag 'application' %>\n" if Rails.version < "6"}
-    <%= javascript_pack_tag 'application' %>
-  </body>
-</html>
+if Rails.version < "6"
+  scripts = <<~HTML
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload', defer: true %>
+        <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+  HTML
+  gsub_file('app/views/layouts/application.html.erb', "<%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>", scripts)
+else
+  gsub_file('app/views/layouts/application.html.erb', "<%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>", "<%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload', defer: true %>")
+end
+
+gsub_file('app/views/layouts/application.html.erb', "<%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>", "<%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload', defer: true %>")
+style = <<~HTML
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
 HTML
+gsub_file('app/views/layouts/application.html.erb', "<%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>", style)
 
 # README
 ########################################
-markdown_file_content = <<-MARKDOWN
-Rails app generated with [lewagon/rails-templates](https://github.com/lewagon/rails-templates), created by the [Le Wagon coding bootcamp](https://www.lewagon.com) team.
+markdown_file_content = <<~MARKDOWN
+  Rails app generated with [lewagon/rails-templates](https://github.com/lewagon/rails-templates), created by the [Le Wagon coding bootcamp](https://www.lewagon.com) team.
 MARKDOWN
 file 'README.md', markdown_file_content, force: true
 
 # Generators
 ########################################
-generators = <<-RUBY
-config.generators do |generate|
-      generate.assets false
-      generate.helper false
-      generate.test_framework :test_unit, fixture: false
-    end
+generators = <<~RUBY
+  config.generators do |generate|
+    generate.assets false
+    generate.helper false
+    generate.test_framework :test_unit, fixture: false
+  end
 RUBY
 
 environment generators
@@ -146,23 +105,37 @@ after_bundle do
 
   # Git ignore
   ########################################
-  append_file '.gitignore', <<-TXT
+  append_file '.gitignore', <<~TXT
+    # Ignore .env file containing credentials.
+    .env*
 
-# Ignore .env file containing credentials.
-.env*
-
-# Ignore Mac and Linux file system files
-*.swp
-.DS_Store
-TXT
+    # Ignore Mac and Linux file system files
+    *.swp
+    .DS_Store
+  TXT
 
   # Webpacker / Yarn
   ########################################
-  run 'rm app/javascript/packs/application.js'
   run 'yarn add popper.js jquery bootstrap'
-  file 'app/javascript/packs/application.js', <<-JS
-import "bootstrap";
-JS
+  append_file 'app/javascript/packs/application.js', <<~JS
+
+
+    // ----------------------------------------------------
+    // Note(lewagon): ABOVE IS RAILS DEFAULT CONFIGURATION
+    // WRITE YOUR OWN JS STARTING FROM HERE 👇
+    // ----------------------------------------------------
+
+    // External imports
+    import "bootstrap";
+
+    // Internal imports, e.g:
+    // import { initSelect2 } from '../components/init_select2';
+
+    document.addEventListener('turbolinks:load', () => {
+      // Call your functions here, e.g:
+      // initSelect2();
+    });
+  JS
 
   if Rails.version >= "6"
     prepend_file 'app/javascript/packs/application.js', <<-JS
@@ -174,22 +147,22 @@ require("channels")
   end
 
   inject_into_file 'config/webpack/environment.js', before: 'module.exports' do
-<<-JS
-const webpack = require('webpack')
+    <<~JS
+      const webpack = require('webpack');
 
-// Preventing Babel from transpiling NodeModules packages
-environment.loaders.delete('nodeModules');
+      // Preventing Babel from transpiling NodeModules packages
+      environment.loaders.delete('nodeModules');
 
-// Bootstrap 4 has a dependency over jQuery & Popper.js:
-environment.plugins.prepend('Provide',
-  new webpack.ProvidePlugin({
-    $: 'jquery',
-    jQuery: 'jquery',
-    Popper: ['popper.js', 'default']
-  })
-)
+      // Bootstrap 4 has a dependency over jQuery & Popper.js:
+      environment.plugins.prepend('Provide',
+        new webpack.ProvidePlugin({
+          $: 'jquery',
+          jQuery: 'jquery',
+          Popper: ['popper.js', 'default']
+        })
+      );
 
-JS
+    JS
   end
 
   # Dotenv
@@ -202,7 +175,6 @@ JS
 
   # Git
   ########################################
-  git :init
   git add: '.'
   git commit: "-m 'Initial commit with minimal template from https://github.com/lewagon/rails-templates'"
 end
