@@ -17,6 +17,7 @@ inject_into_file 'Gemfile', after: 'group :development, :test do' do
   gem 'pry-byebug'
   gem 'pry-rails'
   gem 'dotenv-rails'
+  gem 'annotate'
   RUBY
 end
 
@@ -81,6 +82,7 @@ environment generators
 after_bundle do
   # Generators: db + simple form + pages controller
   ########################################
+  generate('annotate:install')
   rails_command 'db:drop db:create db:migrate'
   generate('simple_form:install', '--bootstrap')
   generate(:controller, 'pages', 'home', '--skip-routes', '--no-test-framework')
