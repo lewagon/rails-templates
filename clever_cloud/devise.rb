@@ -91,7 +91,6 @@ file 'app/views/shared/_flashes.html.erb', <<~HTML
 HTML
 
 run 'curl -L https://github.com/lewagon/awesome-navbars/raw/master/templates/_navbar_wagon.html.erb > app/views/shared/_navbar.html.erb'
-run 'curl -L https://raw.githubusercontent.com/lewagon/rails-templates/master/logo.png > app/assets/images/logo.png'
 
 inject_into_file 'app/views/layouts/application.html.erb', after: '<body>' do
   <<-HTML
