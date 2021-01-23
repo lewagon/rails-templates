@@ -22,12 +22,12 @@ end
 
 # Clevercloud conf file
 ########################################
-file 'clevercloud/ruby.json', <<-EOF
-{
-  "deploy": {
-    "rakegoals": ["assets:precompile", "db:migrate"]
+file 'clevercloud/ruby.json', <<~EOF
+  {
+    "deploy": {
+      "rakegoals": ["assets:precompile", "db:migrate"]
+    }
   }
-}
 EOF
 
 # Database conf file
@@ -85,6 +85,7 @@ generators = <<~RUBY
     generate.helper false
     generate.test_framework :test_unit, fixture: false
   end
+
 RUBY
 
 environment generators
@@ -106,6 +107,7 @@ after_bundle do
   # Git ignore
   ########################################
   append_file '.gitignore', <<~TXT
+
     # Ignore .env file containing credentials.
     .env*
 

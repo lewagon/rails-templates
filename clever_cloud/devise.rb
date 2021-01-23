@@ -9,11 +9,13 @@ inject_into_file 'Gemfile', before: 'group :development, :test do' do
     gem 'autoprefixer-rails'
     gem 'font-awesome-sass'
     gem 'simple_form'
+
   RUBY
 end
 
 inject_into_file 'Gemfile', after: 'group :development, :test do' do
   <<-RUBY
+
   gem 'pry-byebug'
   gem 'pry-rails'
   gem 'dotenv-rails'
@@ -24,12 +26,12 @@ gsub_file('Gemfile', /# gem 'redis'/, "gem 'redis'")
 
 # Clevercloud conf file
 ########################################
-file 'clevercloud/ruby.json', <<-EOF
-{
-  "deploy": {
-    "rakegoals": ["assets:precompile", "db:migrate"]
+file 'clevercloud/ruby.json', <<~EOF
+  {
+    "deploy": {
+      "rakegoals": ["assets:precompile", "db:migrate"]
+    }
   }
-}
 EOF
 
 # Database conf file
@@ -102,8 +104,8 @@ end
 
 # README
 ########################################
-markdown_file_content = <<-MARKDOWN
-Rails app generated with [lewagon/rails-templates](https://github.com/lewagon/rails-templates), created by the [Le Wagon coding bootcamp](https://www.lewagon.com) team.
+markdown_file_content = <<~MARKDOWN
+  Rails app generated with [lewagon/rails-templates](https://github.com/lewagon/rails-templates), created by the [Le Wagon coding bootcamp](https://www.lewagon.com) team.
 MARKDOWN
 file 'README.md', markdown_file_content, force: true
 
@@ -115,6 +117,7 @@ generators = <<~RUBY
     generate.helper false
     generate.test_framework :test_unit, fixture: false
   end
+
 RUBY
 
 environment generators
@@ -136,8 +139,10 @@ after_bundle do
   # Git ignore
   ########################################
   append_file '.gitignore', <<~TXT
+
     # Ignore .env file containing credentials.
     .env*
+
     # Ignore Mac and Linux file system files
     *.swp
     .DS_Store
