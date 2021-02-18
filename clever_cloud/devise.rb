@@ -9,11 +9,13 @@ inject_into_file 'Gemfile', before: 'group :development, :test do' do
     gem 'autoprefixer-rails'
     gem 'font-awesome-sass'
     gem 'simple_form'
+
   RUBY
 end
 
 inject_into_file 'Gemfile', after: 'group :development, :test do' do
   <<-RUBY
+
   gem 'pry-byebug'
   gem 'pry-rails'
   gem 'dotenv-rails'
@@ -22,14 +24,36 @@ end
 
 gsub_file('Gemfile', /# gem 'redis'/, "gem 'redis'")
 
+# IRB conf file
+########################################
+irbrc = '
+if defined?(Rails)
+  banner = ''
+
+  if Rails.env.production?
+    banner = "\e[41;97;1m prod \e[0m "
+  elsif Rails.env.staging?
+    banner = "\e[43;97;1m staging \e[0m "
+  end
+
+
+  IRB.conf[:PROMPT][:CUSTOM] = IRB.conf[:PROMPT][:DEFAULT].merge(
+    PROMPT_I: "#{banner}#{IRB.conf[:PROMPT][:DEFAULT][:PROMPT_I]}"
+  )
+
+  IRB.conf[:PROMPT_MODE] = :CUSTOM
+end
+'
+file '.irbrc', irbrc.strip
+
 # Clevercloud conf file
 ########################################
-file 'clevercloud/ruby.json', <<-EOF
-{
-  "deploy": {
-    "rakegoals": ["assets:precompile", "db:migrate"]
+file 'clevercloud/ruby.json', <<~EOF
+  {
+    "deploy": {
+      "rakegoals": ["assets:precompile", "db:migrate"]
+    }
   }
-}
 EOF
 
 # Database conf file
@@ -62,7 +86,9 @@ if Rails.version < "6"
   HTML
   gsub_file('app/views/layouts/application.html.erb', "<%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>", scripts)
 end
+
 gsub_file('app/views/layouts/application.html.erb', "<%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>", "<%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload', defer: true %>")
+
 style = <<~HTML
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
       <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
@@ -102,8 +128,8 @@ end
 
 # README
 ########################################
-markdown_file_content = <<-MARKDOWN
-Rails app generated with [lewagon/rails-templates](https://github.com/lewagon/rails-templates), created by the [Le Wagon coding bootcamp](https://www.lewagon.com) team.
+markdown_file_content = <<~MARKDOWN
+  Rails app generated with [lewagon/rails-templates](https://github.com/lewagon/rails-templates), created by the [Le Wagon coding bootcamp](https://www.lewagon.com) team.
 MARKDOWN
 file 'README.md', markdown_file_content, force: true
 
@@ -115,6 +141,7 @@ generators = <<~RUBY
     generate.helper false
     generate.test_framework :test_unit, fixture: false
   end
+
 RUBY
 
 environment generators
@@ -136,8 +163,10 @@ after_bundle do
   # Git ignore
   ########################################
   append_file '.gitignore', <<~TXT
+
     # Ignore .env file containing credentials.
     .env*
+
     # Ignore Mac and Linux file system files
     *.swp
     .DS_Store
