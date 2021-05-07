@@ -210,7 +210,7 @@ after_bundle do
 
   # Webpacker / Yarn
   ########################################
-  run 'yarn add popper.js jquery bootstrap'
+  run 'yarn add popper.js jquery bootstrap@4.6'
   append_file 'app/javascript/packs/application.js', <<~JS
 
 
