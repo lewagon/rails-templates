@@ -85,7 +85,6 @@ after_bundle do
   generate(:controller, 'pages', 'home', '--skip-routes', '--no-test-framework')
 
   # Replace simple form initializer to work with Bootstrap 5
-  run 'rm config/initializers/simple_form_bootstrap.rb'
   run 'curl -L https://github.com/heartcombo/simple_form-bootstrap/blob/main/config/initializers/simple_form_bootstrap.rb > config/initializers/simple_form_bootstrap.rb'
 
   # Routes
