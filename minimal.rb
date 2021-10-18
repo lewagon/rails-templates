@@ -84,6 +84,10 @@ after_bundle do
   generate('simple_form:install', '--bootstrap')
   generate(:controller, 'pages', 'home', '--skip-routes', '--no-test-framework')
 
+  # Replace simple form initializer to work with Bootstrap 5
+  run 'rm config/initializers/simple_form_bootstrap.rb'
+  run 'curl -L https://github.com/heartcombo/simple_form-bootstrap/blob/main/config/initializers/simple_form_bootstrap.rb > config/initializers/simple_form_bootstrap.rb'
+
   # Routes
   ########################################
   route "root to: 'pages#home'"
@@ -101,7 +105,7 @@ after_bundle do
 
   # Webpacker / Yarn
   ########################################
-  run 'yarn add popper.js jquery bootstrap@4.6'
+  run 'yarn add bootstrap @popperjs/core'
   append_file 'app/javascript/packs/application.js', <<~JS
 
 
@@ -121,25 +125,6 @@ after_bundle do
       // initSelect2();
     });
   JS
-
-  inject_into_file 'config/webpack/environment.js', before: 'module.exports' do
-    <<~JS
-      const webpack = require('webpack');
-
-      // Preventing Babel from transpiling NodeModules packages
-      environment.loaders.delete('nodeModules');
-
-      // Bootstrap 4 has a dependency over jQuery & Popper.js:
-      environment.plugins.prepend('Provide',
-        new webpack.ProvidePlugin({
-          $: 'jquery',
-          jQuery: 'jquery',
-          Popper: ['popper.js', 'default']
-        })
-      );
-
-    JS
-  end
 
   # Dotenv
   ########################################
