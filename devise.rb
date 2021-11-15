@@ -170,6 +170,13 @@ after_bundle do
     import "bootstrap"
   JS
 
+  inject_into_file 'config/webpack/environment.js', before: 'module.exports' do
+    <<~JS
+      // Preventing Babel from transpiling NodeModules packages
+      environment.loaders.delete('nodeModules');
+    JS
+  end
+
   # Dotenv
   ########################################
   run 'touch .env'
