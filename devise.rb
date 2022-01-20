@@ -57,22 +57,20 @@ file 'app/views/shared/_flashes.html.erb', <<~HTML
   <% if notice %>
     <div class="alert alert-info alert-dismissible fade show m-1" role="alert">
       <%= notice %>
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
       </button>
     </div>
   <% end %>
   <% if alert %>
     <div class="alert alert-warning alert-dismissible fade show m-1" role="alert">
       <%= alert %>
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
       </button>
     </div>
   <% end %>
 HTML
 
-run 'curl -L https://github.com/lewagon/awesome-navbars/raw/master/templates/_navbar_wagon.html.erb > app/views/shared/_navbar.html.erb'
+run 'curl -L https://raw.githubusercontent.com/lewagon/awesome-navbars/master/templates/_navbar_wagon.html.erb > app/views/shared/_navbar.html.erb'
 
 inject_into_file 'app/views/layouts/application.html.erb', after: '<body>' do
   <<-HTML
@@ -110,6 +108,9 @@ after_bundle do
   rails_command 'db:drop db:create db:migrate'
   generate('simple_form:install', '--bootstrap')
   generate(:controller, 'pages', 'home', '--skip-routes', '--no-test-framework')
+
+  # Replace simple form initializer to work with Bootstrap 5
+  run 'curl -L https://raw.githubusercontent.com/heartcombo/simple_form-bootstrap/main/config/initializers/simple_form_bootstrap.rb > config/initializers/simple_form_bootstrap.rb'
 
   # Routes
   ########################################
@@ -163,40 +164,16 @@ after_bundle do
 
   # Webpacker / Yarn
   ########################################
-  run 'yarn add popper.js jquery bootstrap@4.6'
+  run 'yarn add bootstrap @popperjs/core'
+  run "rails webpacker:install:stimulus"
   append_file 'app/javascript/packs/application.js', <<~JS
-
-
-    // ----------------------------------------------------
-    // Note(lewagon): ABOVE IS RAILS DEFAULT CONFIGURATION
-    // WRITE YOUR OWN JS STARTING FROM HERE 👇
-    // ----------------------------------------------------
-
-    // External imports
-    import "bootstrap";
-
-    // Internal imports, e.g:
-    // import { initSelect2 } from '../components/init_select2';
-
-    document.addEventListener('turbolinks:load', () => {
-      // Call your functions here, e.g:
-      // initSelect2();
-    });
+    import "bootstrap"
   JS
 
   inject_into_file 'config/webpack/environment.js', before: 'module.exports' do
     <<~JS
-      const webpack = require('webpack');
       // Preventing Babel from transpiling NodeModules packages
       environment.loaders.delete('nodeModules');
-      // Bootstrap 4 has a dependency over jQuery & Popper.js:
-      environment.plugins.prepend('Provide',
-        new webpack.ProvidePlugin({
-          $: 'jquery',
-          jQuery: 'jquery',
-          Popper: ['popper.js', 'default']
-        })
-      );
     JS
   end
 
