@@ -7,13 +7,11 @@ inject_into_file 'Gemfile', before: 'group :development, :test do' do
     gem 'autoprefixer-rails', '10.2.5'
     gem 'font-awesome-sass'
     gem 'simple_form'
-
   RUBY
 end
 
 inject_into_file 'Gemfile', after: 'group :development, :test do' do
   <<-RUBY
-
   gem 'pry-byebug'
   gem 'pry-rails'
   gem 'dotenv-rails'
@@ -22,9 +20,9 @@ end
 
 # Procfile
 ########################################
-file 'Procfile', <<~YAML
-  web: bundle exec puma -C config/puma.rb
-YAML
+# file 'Procfile', <<~YAML
+#   web: bundle exec puma -C config/puma.rb
+# YAML
 
 # Assets
 ########################################
@@ -35,25 +33,24 @@ run 'unzip stylesheets.zip -d app/assets && rm stylesheets.zip && mv app/assets/
 
 # Dev environment
 ########################################
-gsub_file('config/environments/development.rb', /config\.assets\.debug.*/, 'config.assets.debug = false')
+# gsub_file('config/environments/development.rb', /config\.assets\.debug.*/, 'config.assets.debug = false')
 
 # Layout
 ########################################
-if Rails.version < "6"
-  scripts = <<~HTML
-    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload', defer: true %>
-        <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
-  HTML
-  gsub_file('app/views/layouts/application.html.erb', "<%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>", scripts)
-end
+# if Rails.version < "6"
+#   scripts = <<~HTML
+#     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload', defer: true %>
+#         <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+#   HTML
+#   gsub_file('app/views/layouts/application.html.erb', "<%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>", scripts)
+# end
 
-gsub_file('app/views/layouts/application.html.erb', "<%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>", "<%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload', defer: true %>")
+# gsub_file('app/views/layouts/application.html.erb', "<%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>", "<%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload', defer: true %>")
 
 style = <<~HTML
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-      <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
 HTML
-gsub_file('app/views/layouts/application.html.erb', "<%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>", style)
+gsub_file('app/views/layouts/application.html.erb', '<meta name="viewport" content="width=device-width,initial-scale=1">', style)
 
 # README
 ########################################
@@ -105,17 +102,17 @@ after_bundle do
   # Webpacker / Yarn
   ########################################
   run 'yarn add bootstrap @popperjs/core'
-  run "rails webpacker:install:stimulus"
-  append_file 'app/javascript/packs/application.js', <<~JS
+  # run "rails webpacker:install:stimulus"
+  append_file 'app/javascript/application.js', <<~JS
     import "bootstrap"
   JS
 
-  inject_into_file 'config/webpack/environment.js', before: 'module.exports' do
-    <<~JS
-      // Preventing Babel from transpiling NodeModules packages
-      environment.loaders.delete('nodeModules');
-    JS
-  end
+  # inject_into_file 'config/webpack/environment.js', before: 'module.exports' do
+  #   <<~JS
+  #     // Preventing Babel from transpiling NodeModules packages
+  #     environment.loaders.delete('nodeModules');
+  #   JS
+  # end
 
   # Dotenv
   ########################################
