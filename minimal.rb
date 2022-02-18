@@ -102,7 +102,6 @@ after_bundle do
   # Webpacker / Yarn
   ########################################
   run 'yarn add bootstrap @popperjs/core'
-  # run "rails webpacker:install:stimulus"
   append_file 'app/javascript/application.js', <<~JS
     import "bootstrap"
   JS
