@@ -18,12 +18,6 @@ inject_into_file 'Gemfile', after: 'group :development, :test do' do
   RUBY
 end
 
-# Procfile
-########################################
-# file 'Procfile', <<~YAML
-#   web: bundle exec puma -C config/puma.rb
-# YAML
-
 # Assets
 ########################################
 run 'rm -rf app/assets/stylesheets'
@@ -34,23 +28,6 @@ run 'unzip stylesheets.zip -d app/assets && rm stylesheets.zip && mv app/assets/
 # Dev environment
 ########################################
 # gsub_file('config/environments/development.rb', /config\.assets\.debug.*/, 'config.assets.debug = false')
-
-# Layout
-########################################
-# if Rails.version < "6"
-#   scripts = <<~HTML
-#     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload', defer: true %>
-#         <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
-#   HTML
-#   gsub_file('app/views/layouts/application.html.erb', "<%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>", scripts)
-# end
-
-# gsub_file('app/views/layouts/application.html.erb', "<%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>", "<%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload', defer: true %>")
-
-style = <<~HTML
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-HTML
-gsub_file('app/views/layouts/application.html.erb', '<meta name="viewport" content="width=device-width,initial-scale=1">', style)
 
 # README
 ########################################
@@ -101,18 +78,10 @@ after_bundle do
 
   # Webpacker / Yarn
   ########################################
-  # run 'yarn add bootstrap @popperjs/core'
-  # run "rails webpacker:install:stimulus"
+  run 'yarn add bootstrap @popperjs/core'
   append_file 'app/javascript/application.js', <<~JS
     import "bootstrap"
   JS
-
-  # inject_into_file 'config/webpack/environment.js', before: 'module.exports' do
-  #   <<~JS
-  #     // Preventing Babel from transpiling NodeModules packages
-  #     environment.loaders.delete('nodeModules');
-  #   JS
-  # end
 
   # Dotenv
   ########################################
