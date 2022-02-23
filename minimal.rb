@@ -97,6 +97,9 @@ after_bundle do
   # Rename main branch to master
   run 'git branch -m main master'
 
+  # Heroku
+  run 'bundle lock --add-platform x86_64-linux'
+
   # Dotenv
   ########################################
   run "touch '.env'"
