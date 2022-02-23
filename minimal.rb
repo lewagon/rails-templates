@@ -31,7 +31,7 @@ run 'unzip stylesheets.zip -d app/assets && rm stylesheets.zip && mv app/assets/
 
 inject_into_file 'config/initializers/assets.rb', before: '# Precompile additional assets.' do
   <<-RUBY
-  Rails.application.config.assets.paths << Rails.root.join("node_modules")
+Rails.application.config.assets.paths << Rails.root.join("node_modules")
 
   RUBY
 end
@@ -87,13 +87,6 @@ after_bundle do
     .DS_Store
   TXT
 
-  # Webpacker / Yarn
-  ########################################
-  run 'yarn add bootstrap @popperjs/core'
-  append_file 'app/javascript/application.js', <<~JS
-    import "bootstrap"
-  JS
-
   # Rename main branch to master
   run `git branch -m main master`
 
@@ -104,6 +97,15 @@ after_bundle do
   # Rubocop
   ########################################
   run 'curl -L https://raw.githubusercontent.com/lewagon/rails-templates/master/.rubocop.yml > .rubocop.yml'
+  # Webpacker / Yarn
+  ########################################
+
+  run 'yarn add bootstrap'
+  append_file 'app/javascript/application.js', <<~JS
+    import "bootstrap"
+  JS
+
+  run 'yarn add @popperjs/core'
 
   # Git
   ########################################
