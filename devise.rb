@@ -14,6 +14,7 @@ end
 
 inject_into_file 'Gemfile', after: 'group :development, :test do' do
   <<-RUBY
+
   gem 'pry-byebug'
   gem 'pry-rails'
   gem 'dotenv-rails'
@@ -21,6 +22,7 @@ inject_into_file 'Gemfile', after: 'group :development, :test do' do
 end
 
 gsub_file('Gemfile', /# gem 'redis'/, "gem 'redis'")
+gsub_file('Gemfile', '# gem "sassc-rails"', 'gem "sassc-rails"')
 
 # Assets
 ########################################
@@ -29,27 +31,12 @@ run 'rm -rf vendor'
 run 'curl -L https://github.com/lewagon/rails-stylesheets/archive/master.zip > stylesheets.zip'
 run 'unzip stylesheets.zip -d app/assets && rm stylesheets.zip && mv app/assets/rails-stylesheets-master app/assets/stylesheets'
 
-# Dev environment
-########################################
-gsub_file('config/environments/development.rb', /config\.assets\.debug.*/, 'config.assets.debug = false')
+inject_into_file 'config/initializers/assets.rb', before: '# Precompile additional assets.' do
+  <<-RUBY
+Rails.application.config.assets.paths << Rails.root.join("node_modules")
 
-# Layout
-########################################
-if Rails.version < "6"
-  scripts = <<~HTML
-    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload', defer: true %>
-        <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
-  HTML
-  gsub_file('app/views/layouts/application.html.erb', "<%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>", scripts)
+  RUBY
 end
-
-gsub_file('app/views/layouts/application.html.erb', "<%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>", "<%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload', defer: true %>")
-
-style = <<~HTML
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-      <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-HTML
-gsub_file('app/views/layouts/application.html.erb', "<%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>", style)
 
 # Flashes
 ########################################
@@ -165,21 +152,20 @@ after_bundle do
   # Webpacker / Yarn
   ########################################
   run 'yarn add bootstrap @popperjs/core'
-  run "rails webpacker:install:stimulus"
-  append_file 'app/javascript/packs/application.js', <<~JS
+  append_file 'app/javascript/application.js', <<~JS
     import "bootstrap"
   JS
 
-  inject_into_file 'config/webpack/environment.js', before: 'module.exports' do
-    <<~JS
-      // Preventing Babel from transpiling NodeModules packages
-      environment.loaders.delete('nodeModules');
-    JS
-  end
+  gsub_file 'package.json', /(\s}){2}/, '},
+"scripts": { "build": "webpack --config webpack.config.js" }
+}'
+
+  # Rename main branch to master
+  run 'git branch -m main master'
 
   # Dotenv
   ########################################
-  run 'touch .env'
+  run "touch '.env'"
 
   # Rubocop
   ########################################
@@ -187,6 +173,7 @@ after_bundle do
 
   # Git
   ########################################
-  git add: '.'
+  git :init
+  git add: "."
   git commit: "-m 'Initial commit with devise template from https://github.com/lewagon/rails-templates'"
 end

@@ -36,10 +36,6 @@ Rails.application.config.assets.paths << Rails.root.join("node_modules")
   RUBY
 end
 
-# Dev environment
-########################################
-# gsub_file('config/environments/development.rb', /config\.assets\.debug.*/, 'config.assets.debug = false')
-
 # README
 ########################################
 markdown_file_content = <<~MARKDOWN
