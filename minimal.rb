@@ -29,10 +29,10 @@ run 'rm -rf vendor'
 run 'curl -L https://github.com/lewagon/rails-stylesheets/archive/master.zip > stylesheets.zip'
 run 'unzip stylesheets.zip -d app/assets && rm stylesheets.zip && mv app/assets/rails-stylesheets-master app/assets/stylesheets'
 
-inject_into_file 'config/initializers/assets.rb', after: '# Rails.application.config.assets.paths << Emoji.images_path' do
+inject_into_file 'config/initializers/assets.rb', before: '# Precompile additional assets.' do
   <<-RUBY
-
   Rails.application.config.assets.paths << Rails.root.join("node_modules")
+
   RUBY
 end
 
