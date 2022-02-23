@@ -18,6 +18,8 @@ inject_into_file 'Gemfile', after: 'group :development, :test do' do
   RUBY
 end
 
+gsub_file('Gemfile', '# gem "sassc-rails"', 'gem "sassc-rails"')
+
 # Assets
 ########################################
 run 'rm -rf app/assets/stylesheets'
@@ -82,6 +84,9 @@ after_bundle do
   append_file 'app/javascript/application.js', <<~JS
     import "bootstrap"
   JS
+
+  # Rename main branch to master
+  run `git branch -m main master`
 
   # Dotenv
   ########################################
