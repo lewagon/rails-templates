@@ -95,7 +95,7 @@ after_bundle do
   JS
 
   # Rename main branch to master
-  run `git branch -m main master`
+  run 'git branch -m main master'
 
   # Dotenv
   ########################################
@@ -107,6 +107,7 @@ after_bundle do
 
   # Git
   ########################################
-  git add: '.'
+  git :init
+  git add: "."
   git commit: "-m 'Initial commit with minimal template from https://github.com/lewagon/rails-templates'"
 end
