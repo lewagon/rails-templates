@@ -94,11 +94,10 @@ after_bundle do
     import "bootstrap"
   JS
 
-  scripts <<~JS
+  gsub_file 'package.json', '}', <<~JS
     },
     "scripts": { "build": "webpack --config webpack.config.js" }
   JS
-  gsub_file('package.json', '}', scripts)
 
   # Rename main branch to master
   run 'git branch -m main master'
