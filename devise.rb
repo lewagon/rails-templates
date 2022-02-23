@@ -131,6 +131,16 @@ after_bundle do
   ########################################
   rails_command 'db:migrate'
   generate('devise:views')
+  gsub_file(
+    'app/views/devise/registrations/new.html.erb',
+    '<%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>',
+    '<%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), data: { turbo: :false }) do |f| %>'
+  )
+  gsub_file(
+    'app/views/devise/sessions/new.html.erb',
+    '<%= simple_form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>',
+    '<%= simple_form_for(resource, as: resource_name, url: session_path(resource_name), data: { turbo: :false }) do |f| %>'
+  )
 
   # Pages Controller
   ########################################
