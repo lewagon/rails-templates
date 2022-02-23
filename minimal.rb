@@ -99,7 +99,7 @@ after_bundle do
 
   # Dotenv
   ########################################
-  run 'touch .env'
+  run "touch '.env'"
 
   # Rubocop
   ########################################
