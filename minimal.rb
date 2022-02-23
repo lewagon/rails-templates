@@ -31,6 +31,7 @@ run 'unzip stylesheets.zip -d app/assets && rm stylesheets.zip && mv app/assets/
 
 inject_into_file 'config/initializers/assets.rb', after: '# Rails.application.config.assets.paths << Emoji.images_path' do
   <<-RUBY
+
   Rails.application.config.assets.paths << Rails.root.join("node_modules")
   RUBY
 end
