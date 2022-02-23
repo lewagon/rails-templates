@@ -87,6 +87,13 @@ after_bundle do
     .DS_Store
   TXT
 
+  # Webpacker / Yarn
+  ########################################
+  run 'yarn add bootstrap @popperjs/core'
+  append_file 'app/javascript/application.js', <<~JS
+    import "bootstrap"
+  JS
+
   # Rename main branch to master
   run `git branch -m main master`
 
@@ -97,15 +104,6 @@ after_bundle do
   # Rubocop
   ########################################
   run 'curl -L https://raw.githubusercontent.com/lewagon/rails-templates/master/.rubocop.yml > .rubocop.yml'
-  # Webpacker / Yarn
-  ########################################
-
-  run 'yarn add bootstrap'
-  append_file 'app/javascript/application.js', <<~JS
-    import "bootstrap"
-  JS
-
-  run 'yarn add @popperjs/core'
 
   # Git
   ########################################
