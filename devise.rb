@@ -4,9 +4,8 @@ run "if uname | grep -q 'Darwin'; then pgrep spring | xargs kill -9; fi"
 ########################################
 inject_into_file 'Gemfile', before: 'group :development, :test do' do
   <<~RUBY
-    gem 'devise'
-
     gem 'autoprefixer-rails', '10.2.5'
+    gem 'devise'
     gem 'font-awesome-sass'
     gem 'simple_form'
   RUBY
@@ -15,9 +14,9 @@ end
 inject_into_file 'Gemfile', after: 'group :development, :test do' do
   <<-RUBY
 
+  gem 'dotenv-rails'
   gem 'pry-byebug'
   gem 'pry-rails'
-  gem 'dotenv-rails'
   RUBY
 end
 
@@ -165,10 +164,6 @@ after_bundle do
   append_file 'app/javascript/application.js', <<~JS
     import "bootstrap"
   JS
-
-  gsub_file 'package.json', /(\s}){2}/, '},
-"scripts": { "build": "webpack --config webpack.config.js" }
-}'
 
   # Rename main branch to master
   run 'git branch -m main master'

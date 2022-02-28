@@ -14,9 +14,9 @@ end
 inject_into_file 'Gemfile', after: 'group :development, :test do' do
   <<-RUBY
 
+  gem 'dotenv-rails'
   gem 'pry-byebug'
   gem 'pry-rails'
-  gem 'dotenv-rails'
   RUBY
 end
 
@@ -89,10 +89,6 @@ after_bundle do
   append_file 'app/javascript/application.js', <<~JS
     import "bootstrap"
   JS
-
-  gsub_file 'package.json', /(\s}){2}/, '},
-"scripts": { "build": "webpack --config webpack.config.js" }
-}'
 
   # Rename main branch to master
   run 'git branch -m main master'
