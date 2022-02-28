@@ -37,6 +37,15 @@ Rails.application.config.assets.paths << Rails.root.join("node_modules")
   RUBY
 end
 
+# Layout
+########################################
+
+gsub_file(
+  'app/views/layouts/application.html.erb',
+  '<meta name="viewport" content="width=device-width,initial-scale=1">',
+  '<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">'
+)
+
 # Flashes
 ########################################
 file 'app/views/shared/_flashes.html.erb', <<~HTML
@@ -166,9 +175,11 @@ after_bundle do
   JS
 
   # Rename main branch to master
+  ########################################
   run 'git branch -m main master'
 
   # Heroku
+  ########################################
   run 'bundle lock --add-platform x86_64-linux'
 
   # Dotenv
