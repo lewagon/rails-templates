@@ -8,6 +8,7 @@ inject_into_file 'Gemfile', before: 'group :development, :test do' do
     gem 'devise'
     gem 'font-awesome-sass'
     gem 'simple_form'
+    
   RUBY
 end
 
