@@ -12,7 +12,7 @@ inject_into_file 'Gemfile', before: 'group :development, :test do' do
   RUBY
 end
 
-inject_into_file 'Gemfile', after: 'gem "debug", platforms: %i[ mri mingw x64_mingw ] ' do
+inject_into_file 'Gemfile', after: 'gem "debug", platforms: %i[ mri mingw x64_mingw ]' do
   <<-RUBY
   gem 'dotenv-rails'
   gem 'pry-byebug'
