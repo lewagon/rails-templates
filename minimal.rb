@@ -84,6 +84,9 @@ after_bundle do
   generate('simple_form:install', '--bootstrap')
   generate(:controller, 'pages', 'home', '--skip-routes', '--no-test-framework')
 
+  # Replace simple form initializer to work with Bootstrap 5
+  run 'curl -L https://gist.githubusercontent.com/dmilon/1d10a014e82b55e5d3208014a96f3cb8/raw/9b556b73b247bd0b3bf2cf94e3f7a3a32ec08db6/simple_form_boostrap.rb > config/initializers/simple_form_bootstrap.rb'
+
   # Routes
   ########################################
   route "root to: 'pages#home'"
