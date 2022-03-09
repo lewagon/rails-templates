@@ -31,7 +31,7 @@ YAML
 run 'rm -rf app/assets/stylesheets'
 run 'rm -rf vendor'
 run 'curl -L https://github.com/lewagon/rails-stylesheets/archive/master.zip > stylesheets.zip'
-run 'unzip stylesheets.zip -d app/assets && rm stylesheets.zip && mv app/assets/master app/assets/stylesheets'
+run 'unzip stylesheets.zip -d app/assets && rm stylesheets.zip && mv app/assets/rails-stylesheets-master app/assets/stylesheets'
 
 # Dev environment
 ########################################
