@@ -84,8 +84,8 @@ after_bundle do
   generate('simple_form:install', '--bootstrap')
   generate(:controller, 'pages', 'home', '--skip-routes', '--no-test-framework')
 
-  # Replace simple form initializer to work with Bootstrap 5
-  run 'curl -L https://gist.githubusercontent.com/dmilon/1d10a014e82b55e5d3208014a96f3cb8/raw/9b556b73b247bd0b3bf2cf94e3f7a3a32ec08db6/simple_form_boostrap.rb > config/initializers/simple_form_bootstrap.rb'
+  # NOTE(dmilon): To this day (March, 9th, 2022), Simple Form is not yet fully compatible with Bootstrap 5. To still use Bootstrap 5 with Simple Form, we need to replace the content of your `config/initializers/simple_form_bootstrap.rb` file with [this](https://github.com/heartcombo/simple_form-bootstrap/blob/main/config/initializers/simple_form_bootstrap.rb).:
+  run 'curl -L https://raw.githubusercontent.com/heartcombo/simple_form-bootstrap/main/config/initializers/simple_form_bootstrap.rb > config/initializers/simple_form_bootstrap.rb'
 
   # Routes
   ########################################
