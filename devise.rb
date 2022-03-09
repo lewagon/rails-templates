@@ -8,7 +8,7 @@ inject_into_file 'Gemfile', before: 'group :development, :test do' do
 
     gem 'autoprefixer-rails', '10.2.5'
     gem 'font-awesome-sass'
-    gem 'simple_form'
+    gem 'simple_form', github: 'heartcombo/simple_form'
   RUBY
 end
 
@@ -108,9 +108,6 @@ after_bundle do
   rails_command 'db:drop db:create db:migrate'
   generate('simple_form:install', '--bootstrap')
   generate(:controller, 'pages', 'home', '--skip-routes', '--no-test-framework')
-
-  # NOTE(dmilon): To this day (March, 9th, 2022), Simple Form is not yet fully compatible with Bootstrap 5. To still use Bootstrap 5 with Simple Form, we need to replace the content of your `config/initializers/simple_form_bootstrap.rb` file with [this](https://github.com/heartcombo/simple_form-bootstrap/blob/main/config/initializers/simple_form_bootstrap.rb).:
-  run 'curl -L https://raw.githubusercontent.com/heartcombo/simple_form-bootstrap/main/config/initializers/simple_form_bootstrap.rb > config/initializers/simple_form_bootstrap.rb'
 
   # Routes
   ########################################
