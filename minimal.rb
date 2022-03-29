@@ -99,9 +99,6 @@ after_bundle do
     import "bootstrap"
   JS
 
-  # Rename main branch to master
-  run 'git branch -m main master'
-
   # Heroku
   run 'bundle lock --add-platform x86_64-linux'
 
