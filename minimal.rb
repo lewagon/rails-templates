@@ -6,12 +6,12 @@ inject_into_file 'Gemfile', before: 'group :development, :test do' do
   <<~RUBY
     gem 'autoprefixer-rails', '10.2.5'
     gem 'font-awesome-sass'
-    gem 'simple_form'
+    gem 'simple_form', github: 'heartcombo/simple_form'
 
   RUBY
 end
 
-inject_into_file 'Gemfile', after: 'group :development, :test do' do
+inject_into_file 'Gemfile', after: 'gem "debug", platforms: %i[ mri mingw x64_mingw ]' do
   <<-RUBY
 
   gem 'dotenv-rails'
@@ -73,9 +73,6 @@ after_bundle do
   rails_command 'db:drop db:create db:migrate'
   generate('simple_form:install', '--bootstrap')
   generate(:controller, 'pages', 'home', '--skip-routes', '--no-test-framework')
-
-  # Replace simple form initializer to work with Bootstrap 5
-  run 'curl -L https://raw.githubusercontent.com/heartcombo/simple_form-bootstrap/main/config/initializers/simple_form_bootstrap.rb > config/initializers/simple_form_bootstrap.rb'
 
   # Routes
   ########################################
