@@ -63,7 +63,7 @@ file "app/views/shared/_flashes.html.erb", <<~HTML
   <% end %>
 HTML
 
-run "curl -L https://raw.githubusercontent.com/lewagon/awesome-navbars/master/templates/_navbar_wagon.html.erb > app/views/shared/_navbar.html.erb"
+run "curl -L https://raw.githubusercontent.com/lewagon/awesome-navbars/rails-7/templates/_navbar_wagon.html.erb > app/views/shared/_navbar.html.erb"
 
 inject_into_file "app/views/layouts/application.html.erb", after: "<body>" do
   <<-HTML
@@ -143,6 +143,18 @@ after_bundle do
     "app/views/devise/sessions/new.html.erb",
     "<%= simple_form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>",
     "<%= simple_form_for(resource, as: resource_name, url: session_path(resource_name), data: { turbo: :false }) do |f| %>"
+  )
+  gsub_file(
+    "app/views/devise/registrations/edit.html.erb",
+    <<~HTML
+      <p>Unhappy? <%= link_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete %></p>
+    HTML,
+    <<~HTML
+      <div class="d-flex align-items-center">
+        <div>Unhappy?</div>
+        <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete, class: "btn btn-link" %>
+      </div>
+    HTML
   )
 
   # Pages Controller
