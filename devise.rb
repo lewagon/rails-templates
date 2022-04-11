@@ -12,11 +12,10 @@ inject_into_file "Gemfile", before: "group :development, :test do" do
 end
 
 inject_into_file "Gemfile", after: 'gem "debug", platforms: %i[ mri mingw x64_mingw ]' do
-  <<-RUBY
-
-  gem "dotenv-rails"
-  gem "pry-byebug"
-  gem "pry-rails"
+  <<~RUBY
+    gem "dotenv-rails"
+    gem "pry-byebug"
+    gem "pry-rails"
   RUBY
 end
 
@@ -66,8 +65,7 @@ HTML
 run "curl -L https://raw.githubusercontent.com/lewagon/awesome-navbars/rails-7/templates/_navbar_wagon.html.erb > app/views/shared/_navbar.html.erb"
 
 inject_into_file "app/views/layouts/application.html.erb", after: "<body>" do
-  <<-HTML
-
+  <<~HTML
     <%= render "shared/navbar" %>
     <%= render "shared/flashes" %>
   HTML
@@ -144,18 +142,16 @@ after_bundle do
     "<%= simple_form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>",
     "<%= simple_form_for(resource, as: resource_name, url: session_path(resource_name), data: { turbo: :false }) do |f| %>"
   )
-  gsub_file(
-    "app/views/devise/registrations/edit.html.erb",
-    <<~HTML
-      <p>Unhappy? <%= link_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete %></p>
-    HTML,
-    <<~HTML
-      <div class="d-flex align-items-center">
-        <div>Unhappy?</div>
-        <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete, class: "btn btn-link" %>
-      </div>
-    HTML
-  )
+  link_to = <<~HTML
+    <p>Unhappy? <%= link_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete %></p>
+  HTML
+  button_to = <<~HTML
+    <div class="d-flex align-items-center">
+      <div>Unhappy?</div>
+      <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete, class: "btn btn-link" %>
+    </div>
+  HTML
+  gsub_file("app/views/devise/registrations/edit.html.erb", link_to, button_to)
 
   # Pages Controller
   ########################################
