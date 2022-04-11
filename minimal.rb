@@ -1,6 +1,6 @@
 run "if uname | grep -q 'Darwin'; then pgrep spring | xargs kill -9; fi"
 
-# GEMFILE
+# Gemfile
 ########################################
 inject_into_file "Gemfile", before: "group :development, :test do" do
   <<~RUBY
@@ -64,7 +64,7 @@ RUBY
 environment generators
 
 ########################################
-# AFTER BUNDLE
+# After bundle
 ########################################
 after_bundle do
   # Generators: db + simple form + pages controller
@@ -77,7 +77,7 @@ after_bundle do
   ########################################
   route "root to: 'pages#home'"
 
-  # Git ignore
+  # Gitignore
   ########################################
   append_file ".gitignore", <<~TXT
     # Ignore .env file containing credentials.
@@ -88,7 +88,7 @@ after_bundle do
     .DS_Store
   TXT
 
-  # Webpacker / Yarn
+  # Yarn
   ########################################
   run "yarn add bootstrap @popperjs/core"
   append_file "app/javascript/application.js", <<~JS

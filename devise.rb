@@ -1,6 +1,6 @@
 run "if uname | grep -q 'Darwin'; then pgrep spring | xargs kill -9; fi"
 
-# GEMFILE
+# Gemfile
 ########################################
 inject_into_file "Gemfile", before: "group :development, :test do" do
   <<~RUBY
@@ -93,7 +93,7 @@ RUBY
 environment generators
 
 ########################################
-# AFTER BUNDLE
+# After bundle
 ########################################
 after_bundle do
   # Generators: db + simple form + pages controller
@@ -106,7 +106,7 @@ after_bundle do
   ########################################
   route 'root to: "pages#home"'
 
-  # Git ignore
+  # Gitignore
   ########################################
   append_file ".gitignore", <<~TXT
     # Ignore .env file containing credentials.
@@ -121,7 +121,7 @@ after_bundle do
   generate("devise:install")
   generate("devise", "User")
 
-  # App controller
+  # Application controller
   ########################################
   run "rm app/controllers/application_controller.rb"
   file "app/controllers/application_controller.rb", <<~RUBY
@@ -162,7 +162,7 @@ after_bundle do
   environment 'config.action_mailer.default_url_options = { host: "http://localhost:3000" }', env: "development"
   environment 'config.action_mailer.default_url_options = { host: "http://TODO_PUT_YOUR_DOMAIN_HERE" }', env: "production"
 
-  # Webpacker / Yarn
+  # Yarn
   ########################################
   run "yarn add bootstrap @popperjs/core"
   append_file "app/javascript/application.js", <<~JS
