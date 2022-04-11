@@ -2,38 +2,36 @@ run "if uname | grep -q 'Darwin'; then pgrep spring | xargs kill -9; fi"
 
 # GEMFILE
 ########################################
-inject_into_file 'Gemfile', before: 'group :development, :test do' do
+inject_into_file "Gemfile", before: "group :development, :test do" do
   <<~RUBY
-    gem 'autoprefixer-rails', '10.2.5'
-    gem 'devise'
-    gem 'font-awesome-sass'
-    gem 'simple_form', github: 'heartcombo/simple_form'
+    gem "autoprefixer-rails", "10.2.5"
+    gem "devise"
+    gem "font-awesome-sass"
+    gem "simple_form", github: "heartcombo/simple_form"
   RUBY
 end
 
-inject_into_file 'Gemfile', after: 'gem "debug", platforms: %i[ mri mingw x64_mingw ]' do
+inject_into_file "Gemfile", after: 'gem "debug", platforms: %i[ mri mingw x64_mingw ]' do
   <<-RUBY
 
-  gem 'dotenv-rails'
-  gem 'pry-byebug'
-  gem 'pry-rails'
+  gem "dotenv-rails"
+  gem "pry-byebug"
+  gem "pry-rails"
   RUBY
 end
 
-gsub_file('Gemfile', /# gem 'redis'/, "gem 'redis'")
-gsub_file('Gemfile', '# gem "sassc-rails"', 'gem "sassc-rails"')
+gsub_file("Gemfile", '# gem "sassc-rails"', 'gem "sassc-rails"')
 
 # Assets
 ########################################
-run 'rm -rf app/assets/stylesheets'
-run 'rm -rf vendor'
-run 'curl -L https://github.com/lewagon/rails-stylesheets/archive/master.zip > stylesheets.zip'
-run 'unzip stylesheets.zip -d app/assets && rm stylesheets.zip && mv app/assets/rails-stylesheets-master app/assets/stylesheets'
+run "rm -rf app/assets/stylesheets"
+run "rm -rf vendor"
+run "curl -L https://github.com/lewagon/rails-stylesheets/archive/master.zip > stylesheets.zip"
+run "unzip stylesheets.zip -d app/assets && rm stylesheets.zip && mv app/assets/rails-stylesheets-master app/assets/stylesheets"
 
-inject_into_file 'config/initializers/assets.rb', before: '# Precompile additional assets.' do
-  <<-RUBY
-Rails.application.config.assets.paths << Rails.root.join("node_modules")
-
+inject_into_file "config/initializers/assets.rb", before: "# Precompile additional assets." do
+  <<~RUBY
+    Rails.application.config.assets.paths << Rails.root.join("node_modules")
   RUBY
 end
 
@@ -41,14 +39,14 @@ end
 ########################################
 
 gsub_file(
-  'app/views/layouts/application.html.erb',
+  "app/views/layouts/application.html.erb",
   '<meta name="viewport" content="width=device-width,initial-scale=1">',
   '<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">'
 )
 
 # Flashes
 ########################################
-file 'app/views/shared/_flashes.html.erb', <<~HTML
+file "app/views/shared/_flashes.html.erb", <<~HTML
   <% if notice %>
     <div class="alert alert-info alert-dismissible fade show m-1" role="alert">
       <%= notice %>
@@ -65,22 +63,22 @@ file 'app/views/shared/_flashes.html.erb', <<~HTML
   <% end %>
 HTML
 
-run 'curl -L https://raw.githubusercontent.com/lewagon/awesome-navbars/master/templates/_navbar_wagon.html.erb > app/views/shared/_navbar.html.erb'
+run "curl -L https://raw.githubusercontent.com/lewagon/awesome-navbars/master/templates/_navbar_wagon.html.erb > app/views/shared/_navbar.html.erb"
 
-inject_into_file 'app/views/layouts/application.html.erb', after: '<body>' do
+inject_into_file "app/views/layouts/application.html.erb", after: "<body>" do
   <<-HTML
 
-    <%= render 'shared/navbar' %>
-    <%= render 'shared/flashes' %>
+    <%= render "shared/navbar" %>
+    <%= render "shared/flashes" %>
   HTML
 end
 
 # README
 ########################################
-markdown_file_content = <<-MARKDOWN
-Rails app generated with [lewagon/rails-templates](https://github.com/lewagon/rails-templates), created by the [Le Wagon coding bootcamp](https://www.lewagon.com) team.
+markdown_file_content = <<~MARKDOWN
+  Rails app generated with [lewagon/rails-templates](https://github.com/lewagon/rails-templates), created by the [Le Wagon coding bootcamp](https://www.lewagon.com) team.
 MARKDOWN
-file 'README.md', markdown_file_content, force: true
+file "README.md", markdown_file_content, force: true
 
 # Generators
 ########################################
@@ -100,17 +98,17 @@ environment generators
 after_bundle do
   # Generators: db + simple form + pages controller
   ########################################
-  rails_command 'db:drop db:create db:migrate'
-  generate('simple_form:install', '--bootstrap')
-  generate(:controller, 'pages', 'home', '--skip-routes', '--no-test-framework')
+  rails_command "db:drop db:create db:migrate"
+  generate("simple_form:install", "--bootstrap")
+  generate(:controller, "pages", "home", "--skip-routes", "--no-test-framework")
 
   # Routes
   ########################################
-  route "root to: 'pages#home'"
+  route 'root to: "pages#home"'
 
   # Git ignore
   ########################################
-  append_file '.gitignore', <<~TXT
+  append_file ".gitignore", <<~TXT
     # Ignore .env file containing credentials.
     .env*
     # Ignore Mac and Linux file system files
@@ -120,13 +118,13 @@ after_bundle do
 
   # Devise install + user
   ########################################
-  generate('devise:install')
-  generate('devise', 'User')
+  generate("devise:install")
+  generate("devise", "User")
 
   # App controller
   ########################################
-  run 'rm app/controllers/application_controller.rb'
-  file 'app/controllers/application_controller.rb', <<~RUBY
+  run "rm app/controllers/application_controller.rb"
+  file "app/controllers/application_controller.rb", <<~RUBY
     class ApplicationController < ActionController::Base
       before_action :authenticate_user!
     end
@@ -134,23 +132,23 @@ after_bundle do
 
   # migrate + devise views
   ########################################
-  rails_command 'db:migrate'
-  generate('devise:views')
+  rails_command "db:migrate"
+  generate("devise:views")
   gsub_file(
-    'app/views/devise/registrations/new.html.erb',
-    '<%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>',
-    '<%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), data: { turbo: :false }) do |f| %>'
+    "app/views/devise/registrations/new.html.erb",
+    "<%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>",
+    "<%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), data: { turbo: :false }) do |f| %>"
   )
   gsub_file(
-    'app/views/devise/sessions/new.html.erb',
-    '<%= simple_form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>',
-    '<%= simple_form_for(resource, as: resource_name, url: session_path(resource_name), data: { turbo: :false }) do |f| %>'
+    "app/views/devise/sessions/new.html.erb",
+    "<%= simple_form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>",
+    "<%= simple_form_for(resource, as: resource_name, url: session_path(resource_name), data: { turbo: :false }) do |f| %>"
   )
 
   # Pages Controller
   ########################################
-  run 'rm app/controllers/pages_controller.rb'
-  file 'app/controllers/pages_controller.rb', <<~RUBY
+  run "rm app/controllers/pages_controller.rb"
+  file "app/controllers/pages_controller.rb", <<~RUBY
     class PagesController < ApplicationController
       skip_before_action :authenticate_user!, only: [ :home ]
 
@@ -161,19 +159,19 @@ after_bundle do
 
   # Environments
   ########################################
-  environment 'config.action_mailer.default_url_options = { host: "http://localhost:3000" }', env: 'development'
-  environment 'config.action_mailer.default_url_options = { host: "http://TODO_PUT_YOUR_DOMAIN_HERE" }', env: 'production'
+  environment 'config.action_mailer.default_url_options = { host: "http://localhost:3000" }', env: "development"
+  environment 'config.action_mailer.default_url_options = { host: "http://TODO_PUT_YOUR_DOMAIN_HERE" }', env: "production"
 
   # Webpacker / Yarn
   ########################################
-  run 'yarn add bootstrap @popperjs/core'
-  append_file 'app/javascript/application.js', <<~JS
+  run "yarn add bootstrap @popperjs/core"
+  append_file "app/javascript/application.js", <<~JS
     import "bootstrap"
   JS
 
   # Heroku
   ########################################
-  run 'bundle lock --add-platform x86_64-linux'
+  run "bundle lock --add-platform x86_64-linux"
 
   # Dotenv
   ########################################
@@ -181,7 +179,7 @@ after_bundle do
 
   # Rubocop
   ########################################
-  run 'curl -L https://raw.githubusercontent.com/lewagon/rails-templates/master/.rubocop.yml > .rubocop.yml'
+  run "curl -L https://raw.githubusercontent.com/lewagon/rails-templates/master/.rubocop.yml > .rubocop.yml"
 
   # Git
   ########################################
