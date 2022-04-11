@@ -9,7 +9,6 @@ using [Rails Templates](http://guides.rubyonrails.org/rails_application_template
 Get a minimal rails app ready to be deployed on Heroku with Bootstrap, Simple form and debugging gems.
 
 ```bash
-# TODO(Juliends) restore branch name to master before we merge
 rails new \
   --database postgresql \
   -j webpack \
@@ -22,7 +21,6 @@ rails new \
 Same as minimal **plus** a Devise install with a generated `User` model.
 
 ```bash
-# TODO(Juliends) restore branch name to master before we merge
 rails new \
   --database postgresql \
   -j webpack \
