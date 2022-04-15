@@ -12,12 +12,10 @@ inject_into_file "Gemfile", before: "group :development, :test do" do
 end
 
 inject_into_file "Gemfile", after: 'gem "debug", platforms: %i[ mri mingw x64_mingw ]' do
-<<-RUBY
+  <<~RUBY
 
-  gem "dotenv-rails"
-  gem "pry-byebug"
-  gem "pry-rails"
-RUBY
+    gem "dotenv-rails"
+  RUBY
 end
 
 gsub_file("Gemfile", '# gem "sassc-rails"', 'gem "sassc-rails"')
