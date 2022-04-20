@@ -73,7 +73,7 @@ after_bundle do
 
   # Routes
   ########################################
-  route "root to: 'pages#home'"
+  route 'root to: "pages#home"'
 
   # Gitignore
   ########################################
