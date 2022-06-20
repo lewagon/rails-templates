@@ -3,7 +3,7 @@
 Quickly generate a rails app with the default [Wagon](https://www.lewagon.com) configuration
 using [Rails Templates](http://guides.rubyonrails.org/rails_application_templates.html).
 
-⚠️ The following templates have been made for Rails 6. If you use Rails 7, please refer to the [`rails-7` branch templates](https://github.com/lewagon/rails-templates/tree/rails-7)
+⚠️ The following templates have been made for Rails 7. If you use Rails 6, please refer to the [`master` branch templates](https://github.com/lewagon/rails-templates)
 
 ## Minimal
 
@@ -11,8 +11,9 @@ Get a minimal rails app ready to be deployed on Heroku with Bootstrap, Simple fo
 
 ```bash
 rails new \
-  --database postgresql \
-  -m https://raw.githubusercontent.com/lewagon/rails-templates/master/minimal.rb \
+  -d postgresql \
+  -j webpack \
+  -m https://raw.githubusercontent.com/lewagon/rails-templates/rails-7/minimal.rb \
   CHANGE_THIS_TO_YOUR_RAILS_APP_NAME
 ```
 
@@ -22,7 +23,8 @@ Same as minimal **plus** a Devise install with a generated `User` model.
 
 ```bash
 rails new \
-  --database postgresql \
-  -m https://raw.githubusercontent.com/lewagon/rails-templates/master/devise.rb \
+  -d postgresql \
+  -j webpack \
+  -m https://raw.githubusercontent.com/lewagon/rails-templates/rails-7/devise.rb \
   CHANGE_THIS_TO_YOUR_RAILS_APP_NAME
 ```
