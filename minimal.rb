@@ -62,6 +62,7 @@ after_bundle do
 
       pin "application", preload: true
       pin_all_from "app/javascript/components", under: "components"
+      pin "@hotwired/turbo-rails", to: "turbo.min.js", preload: true
       pin "vue", to: 'https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.esm.browser.min.js'
       pin "bootstrap", to: "https://ga.jspm.io/npm:bootstrap@5.1.3/dist/js/bootstrap.esm.js"
       pin "@popperjs/core", to: "https://ga.jspm.io/npm:@popperjs/core@2.11.5/lib/index.js"
@@ -76,6 +77,7 @@ after_bundle do
 
   inject_into_file "app/javascript/application.js" do
     <<~JS
+      import "@hotwired/turbo-rails"
       import 'bootstrap';
     JS
   end
