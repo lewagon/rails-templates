@@ -7,8 +7,8 @@ inject_into_file 'Gemfile', before: 'group :development, :test do' do
     gem 'devise'
 
     gem 'autoprefixer-rails', '10.2.5'
-    gem 'font-awesome-sass'
-    gem 'simple_form'
+    gem 'font-awesome-sass', '~> 5.6.1'
+    gem 'simple_form', github: 'heartcombo/simple_form'
   RUBY
 end
 
@@ -57,16 +57,14 @@ file 'app/views/shared/_flashes.html.erb', <<~HTML
   <% if notice %>
     <div class="alert alert-info alert-dismissible fade show m-1" role="alert">
       <%= notice %>
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
       </button>
     </div>
   <% end %>
   <% if alert %>
     <div class="alert alert-warning alert-dismissible fade show m-1" role="alert">
       <%= alert %>
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
       </button>
     </div>
   <% end %>
@@ -163,40 +161,16 @@ after_bundle do
 
   # Webpacker / Yarn
   ########################################
-  run 'yarn add popper.js jquery bootstrap@4.6'
+  run 'yarn add bootstrap @popperjs/core'
+  run "rails webpacker:install:stimulus"
   append_file 'app/javascript/packs/application.js', <<~JS
-
-
-    // ----------------------------------------------------
-    // Note(lewagon): ABOVE IS RAILS DEFAULT CONFIGURATION
-    // WRITE YOUR OWN JS STARTING FROM HERE 👇
-    // ----------------------------------------------------
-
-    // External imports
-    import "bootstrap";
-
-    // Internal imports, e.g:
-    // import { initSelect2 } from '../components/init_select2';
-
-    document.addEventListener('turbolinks:load', () => {
-      // Call your functions here, e.g:
-      // initSelect2();
-    });
+    import "bootstrap"
   JS
 
   inject_into_file 'config/webpack/environment.js', before: 'module.exports' do
     <<~JS
-      const webpack = require('webpack');
       // Preventing Babel from transpiling NodeModules packages
       environment.loaders.delete('nodeModules');
-      // Bootstrap 4 has a dependency over jQuery & Popper.js:
-      environment.plugins.prepend('Provide',
-        new webpack.ProvidePlugin({
-          $: 'jquery',
-          jQuery: 'jquery',
-          Popper: ['popper.js', 'default']
-        })
-      );
     JS
   end
 
