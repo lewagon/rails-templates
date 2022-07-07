@@ -31,7 +31,7 @@ YAML
 run "rm -rf app/assets/stylesheets"
 run "rm -rf vendor"
 run "curl -L https://github.com/lewagon/rails-stylesheets/archive/no-update.zip > stylesheets.zip"
-run "unzip stylesheets.zip -d app/assets && rm -f stylesheets.zip && rm -f app/assets/rails-stylesheets-no-updatea/README.md"
+run "unzip stylesheets.zip -d app/assets && rm -f stylesheets.zip && rm -f app/assets/rails-stylesheets-no-update/README.md"
 run "mv app/assets/rails-stylesheets-no-update app/assets/stylesheets"
 
 # Dev environment
