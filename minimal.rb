@@ -4,15 +4,16 @@ run "if uname | grep -q 'Darwin'; then pgrep spring | xargs kill -9; fi"
 ########################################
 inject_into_file "Gemfile", before: "group :development, :test do" do
   <<~RUBY
+    gem "bootstrap"
     gem "autoprefixer-rails"
     gem "font-awesome-sass", "~> 6.1"
     gem "simple_form", github: "heartcombo/simple_form"
+
   RUBY
 end
 
 inject_into_file "Gemfile", after: 'gem "debug", platforms: %i[ mri mingw x64_mingw ]' do
 <<-RUBY
-
   gem "dotenv-rails"
 RUBY
 end
@@ -22,14 +23,14 @@ gsub_file("Gemfile", '# gem "sassc-rails"', 'gem "sassc-rails"')
 # Assets
 ########################################
 run "rm -rf app/assets/stylesheets"
-run "rm -rf vendor"
+# run "rm -rf vendor"
 run "curl -L https://github.com/lewagon/rails-stylesheets/archive/master.zip > stylesheets.zip"
 run "unzip stylesheets.zip -d app/assets && rm -f stylesheets.zip && rm -f app/assets/rails-stylesheets-master/README.md"
 run "mv app/assets/rails-stylesheets-master app/assets/stylesheets"
 
 inject_into_file "config/initializers/assets.rb", before: "# Precompile additional assets." do
   <<~RUBY
-    Rails.application.config.assets.paths << Rails.root.join("node_modules")
+    Rails.application.config.assets.paths << Rails.root.join("bootstrap.min.js popper.js")
   RUBY
 end
 
@@ -57,6 +58,7 @@ generators = <<~RUBY
     generate.helper false
     generate.test_framework :test_unit, fixture: false
   end
+
 RUBY
 
 environment generators
@@ -78,6 +80,7 @@ after_bundle do
   # Gitignore
   ########################################
   append_file ".gitignore", <<~TXT
+
     # Ignore .env file containing credentials.
     .env*
 
@@ -88,8 +91,9 @@ after_bundle do
 
   # Yarn
   ########################################
-  run "yarn add bootstrap @popperjs/core"
+  run "importmap pin bootstrap"
   append_file "app/javascript/application.js", <<~JS
+    import "popper"
     import "bootstrap"
   JS
 
@@ -109,4 +113,5 @@ after_bundle do
   git :init
   git add: "."
   git commit: "-m 'Initial commit with minimal template from https://github.com/lewagon/rails-templates'"
+  # git branch: "-m main master"
 end
