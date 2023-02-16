@@ -26,6 +26,8 @@ run "curl -L https://github.com/lewagon/rails-stylesheets/archive/master.zip > s
 run "unzip stylesheets.zip -d app/assets && rm -f stylesheets.zip && rm -f app/assets/rails-stylesheets-master/README.md"
 run "mv app/assets/rails-stylesheets-master app/assets/stylesheets"
 
+gsub_file("app/assets/stylesheets/application.scss", '@import "bootstrap/scss/bootstrap";', '@import "bootstrap";')
+
 inject_into_file "config/initializers/assets.rb", before: "# Precompile additional assets." do
   <<~RUBY
     Rails.application.config.assets.paths << Rails.root.join("bootstrap.min.js popper.js")
@@ -89,7 +91,6 @@ after_bundle do
 
   # Bootstrap
   ########################################
-  # run "importmap pin bootstrap"
   append_file "config/importmap.rb", <<~RUBY
     pin "popper", to: 'popper.js', preload: true
     pin "bootstrap", to: 'bootstrap.min.js', preload: true
