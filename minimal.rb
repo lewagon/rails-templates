@@ -4,7 +4,7 @@ run "if uname | grep -q 'Darwin'; then pgrep spring | xargs kill -9; fi"
 ########################################
 inject_into_file "Gemfile", before: "group :development, :test do" do
   <<~RUBY
-    gem "bootstrap"
+    gem "bootstrap", "~> 5.2"
     gem "autoprefixer-rails"
     gem "font-awesome-sass", "~> 6.1"
     gem "simple_form", github: "heartcombo/simple_form"
@@ -21,7 +21,7 @@ gsub_file("Gemfile", '# gem "sassc-rails"', 'gem "sassc-rails"')
 # Assets
 ########################################
 run "rm -rf app/assets/stylesheets"
-# run "rm -rf vendor"
+run "rm -rf vendor"
 run "curl -L https://github.com/lewagon/rails-stylesheets/archive/master.zip > stylesheets.zip"
 run "unzip stylesheets.zip -d app/assets && rm -f stylesheets.zip && rm -f app/assets/rails-stylesheets-master/README.md"
 run "mv app/assets/rails-stylesheets-master app/assets/stylesheets"
@@ -110,5 +110,4 @@ after_bundle do
   git :init
   git add: "."
   git commit: "-m 'Initial commit with minimal template from https://github.com/lewagon/rails-templates'"
-  # git branch: "-m main master"
 end
