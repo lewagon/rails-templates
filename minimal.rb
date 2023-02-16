@@ -87,11 +87,22 @@ after_bundle do
     .DS_Store
   TXT
 
-  # Yarn
+  # Bootstrap
   ########################################
-  run "importmap pin bootstrap"
+  # run "importmap pin bootstrap"
+  append_file "config/importmap.rb", <<~RUBY
+    pin "popper", to: 'popper.js', preload: true
+    pin "bootstrap", to: 'bootstrap.min.js', preload: true
+  RUBY
+
   append_file "app/javascript/application.js", <<~JS
+    import "popper"
     import "bootstrap"
+  JS
+
+  append_file "app/assets/config/manifest.js", <<~JS
+    //= link popper.js
+    //= link bootstrap.min.js
   JS
 
   # Heroku
