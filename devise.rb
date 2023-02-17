@@ -4,18 +4,17 @@ run "if uname | grep -q 'Darwin'; then pgrep spring | xargs kill -9; fi"
 ########################################
 inject_into_file "Gemfile", before: "group :development, :test do" do
   <<~RUBY
+    gem "bootstrap", "~> 5.2"
     gem "devise"
     gem "autoprefixer-rails"
     gem "font-awesome-sass", "~> 6.1"
     gem "simple_form", github: "heartcombo/simple_form"
+
   RUBY
 end
 
 inject_into_file "Gemfile", after: 'gem "debug", platforms: %i[ mri mingw x64_mingw ]' do
-<<-RUBY
-
-  gem "dotenv-rails"
-RUBY
+  "\n  gem \"dotenv-rails\""
 end
 
 gsub_file("Gemfile", '# gem "sassc-rails"', 'gem "sassc-rails"')
@@ -28,9 +27,11 @@ run "curl -L https://github.com/lewagon/rails-stylesheets/archive/master.zip > s
 run "unzip stylesheets.zip -d app/assets && rm -f stylesheets.zip && rm -f app/assets/rails-stylesheets-master/README.md"
 run "mv app/assets/rails-stylesheets-master app/assets/stylesheets"
 
+gsub_file("app/assets/stylesheets/application.scss", '@import "bootstrap/scss/bootstrap";', '@import "bootstrap";')
+
 inject_into_file "config/initializers/assets.rb", before: "# Precompile additional assets." do
   <<~RUBY
-    Rails.application.config.assets.paths << Rails.root.join("node_modules")
+    Rails.application.config.assets.paths << Rails.root.join("bootstrap.min.js popper.js")
   RUBY
 end
 
@@ -109,6 +110,7 @@ after_bundle do
   append_file ".gitignore", <<~TXT
     # Ignore .env file containing credentials.
     .env*
+
     # Ignore Mac and Linux file system files
     *.swp
     .DS_Store
@@ -170,11 +172,21 @@ after_bundle do
   environment 'config.action_mailer.default_url_options = { host: "http://localhost:3000" }', env: "development"
   environment 'config.action_mailer.default_url_options = { host: "http://TODO_PUT_YOUR_DOMAIN_HERE" }', env: "production"
 
-  # Yarn
+# Bootstrap
   ########################################
-  run "yarn add bootstrap @popperjs/core"
+  append_file "config/importmap.rb", <<~RUBY
+    pin "popper", to: 'popper.js', preload: true
+    pin "bootstrap", to: 'bootstrap.min.js', preload: true
+  RUBY
+
   append_file "app/javascript/application.js", <<~JS
+    import "popper"
     import "bootstrap"
+  JS
+
+  append_file "app/assets/config/manifest.js", <<~JS
+    //= link popper.js
+    //= link bootstrap.min.js
   JS
 
   # Heroku
