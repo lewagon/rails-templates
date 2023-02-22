@@ -89,12 +89,9 @@ after_bundle do
     .DS_Store
   TXT
 
-  # Bootstrap
+  # Bootstrap & Popper
   ########################################
-  append_file "config/importmap.rb", <<~RUBY
-    pin "popper", to: 'popper.js', preload: true
-    pin "bootstrap", to: 'bootstrap.min.js', preload: true
-  RUBY
+  run "importmap pin bootstrap"
 
   append_file "app/javascript/application.js", <<~JS
     import "popper"
