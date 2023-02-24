@@ -177,7 +177,7 @@ after_bundle do
   run "importmap pin bootstrap"
 
   append_file "app/javascript/application.js", <<~JS
-    import "popper"
+    import "@popperjs/core"
     import "bootstrap"
   JS
 
