@@ -29,12 +29,6 @@ run "mv app/assets/rails-stylesheets-master app/assets/stylesheets"
 
 gsub_file("app/assets/stylesheets/application.scss", '@import "bootstrap/scss/bootstrap";', '@import "bootstrap";')
 
-inject_into_file "config/initializers/assets.rb", before: "# Precompile additional assets." do
-  <<~RUBY
-    Rails.application.config.assets.paths << Rails.root.join("bootstrap.min.js popper.js")
-  RUBY
-end
-
 # Layout
 ########################################
 
