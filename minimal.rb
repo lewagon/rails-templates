@@ -93,7 +93,7 @@ after_bundle do
   ########################################
   run "importmap pin bootstrap"
 
-  gsub_file("config/importmaps.rb", 'pin "@popperjs/core", to: "https://ga.jspm.io/npm:@popperjs/core@2.11.6/lib/index.js', 'pin "@popperjs/core", to: "https://unpkg.com/@popperjs/core@2.11.2/dist/esm/index.js" # use unpkg.com as ga.jspm.io contains a broken popper package')
+  gsub_file("config/importmap.rb", 'pin "@popperjs/core", to: "https://ga.jspm.io/npm:@popperjs/core@2.11.6/lib/index.js', 'pin "@popperjs/core", to: "https://unpkg.com/@popperjs/core@2.11.2/dist/esm/index.js" # use unpkg.com as ga.jspm.io contains a broken popper package')
 
   append_file "app/javascript/application.js", <<~JS
     import "@popperjs/core"
