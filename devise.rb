@@ -166,9 +166,14 @@ after_bundle do
 
   # Bootstrap & Popper
   ########################################
-  run "importmap pin bootstrap"
+  append_file "config/importmap.rb", <<~RUBY
+    pin "bootstrap", to: "bootstrap.min.js", preload: true
+    pin "@popperjs/core", to: "popper.js", preload: true
+  RUBY
 
-  gsub_file("config/importmap.rb", 'pin "@popperjs/core", to: "https://ga.jspm.io/npm:@popperjs/core@2.11.6/lib/index.js', 'pin "@popperjs/core", to: "https://unpkg.com/@popperjs/core@2.11.2/dist/esm/index.js" # use unpkg.com as ga.jspm.io contains a broken popper package')
+  append_file "config/initializers/assets.rb", <<~RUBY
+    Rails.application.config.assets.precompile += %w(bootstrap.min.js popper.js)
+  RUBY
 
   append_file "app/javascript/application.js", <<~JS
     import "@popperjs/core"
