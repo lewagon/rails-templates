@@ -4,18 +4,17 @@ run "if uname | grep -q 'Darwin'; then pgrep spring | xargs kill -9; fi"
 ########################################
 inject_into_file "Gemfile", before: "group :development, :test do" do
   <<~RUBY
+    gem "bootstrap", "~> 5.2"
     gem "devise"
     gem "autoprefixer-rails"
     gem "font-awesome-sass", "~> 6.1"
     gem "simple_form", github: "heartcombo/simple_form"
+
   RUBY
 end
 
 inject_into_file "Gemfile", after: 'gem "debug", platforms: %i[ mri mingw x64_mingw ]' do
-<<-RUBY
-
-  gem "dotenv-rails"
-RUBY
+  "\n  gem \"dotenv-rails\""
 end
 
 gsub_file("Gemfile", '# gem "sassc-rails"', 'gem "sassc-rails"')
@@ -24,15 +23,9 @@ gsub_file("Gemfile", '# gem "sassc-rails"', 'gem "sassc-rails"')
 ########################################
 run "rm -rf app/assets/stylesheets"
 run "rm -rf vendor"
-run "curl -L https://github.com/lewagon/rails-stylesheets/archive/master.zip > stylesheets.zip"
-run "unzip stylesheets.zip -d app/assets && rm -f stylesheets.zip && rm -f app/assets/rails-stylesheets-master/README.md"
-run "mv app/assets/rails-stylesheets-master app/assets/stylesheets"
-
-inject_into_file "config/initializers/assets.rb", before: "# Precompile additional assets." do
-  <<~RUBY
-    Rails.application.config.assets.paths << Rails.root.join("node_modules")
-  RUBY
-end
+run "curl -L https://github.com/lewagon/rails-stylesheets/archive/more-js.zip > stylesheets.zip"
+run "unzip stylesheets.zip -d app/assets && rm -f stylesheets.zip && rm -f app/assets/rails-stylesheets-more-js/README.md"
+run "mv app/assets/rails-stylesheets-more-js app/assets/stylesheets"
 
 # Layout
 ########################################
@@ -109,6 +102,7 @@ after_bundle do
   append_file ".gitignore", <<~TXT
     # Ignore .env file containing credentials.
     .env*
+
     # Ignore Mac and Linux file system files
     *.swp
     .DS_Store
@@ -170,11 +164,25 @@ after_bundle do
   environment 'config.action_mailer.default_url_options = { host: "http://localhost:3000" }', env: "development"
   environment 'config.action_mailer.default_url_options = { host: "http://TODO_PUT_YOUR_DOMAIN_HERE" }', env: "production"
 
-  # Yarn
+  # Bootstrap & Popper
   ########################################
-  run "yarn add bootstrap @popperjs/core"
+  append_file "config/importmap.rb", <<~RUBY
+    pin "bootstrap", to: "bootstrap.min.js", preload: true
+    pin "@popperjs/core", to: "popper.js", preload: true
+  RUBY
+
+  append_file "config/initializers/assets.rb", <<~RUBY
+    Rails.application.config.assets.precompile += %w(bootstrap.min.js popper.js)
+  RUBY
+
   append_file "app/javascript/application.js", <<~JS
+    import "@popperjs/core"
     import "bootstrap"
+  JS
+
+  append_file "app/assets/config/manifest.js", <<~JS
+    //= link popper.js
+    //= link bootstrap.min.js
   JS
 
   # Heroku
