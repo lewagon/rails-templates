@@ -8,6 +8,7 @@ inject_into_file "Gemfile", before: "group :development, :test do" do
     gem "autoprefixer-rails"
     gem "font-awesome-sass", "~> 6.1"
     gem "simple_form", github: "heartcombo/simple_form"
+    gem "sassc-rails"
 
   RUBY
 end
@@ -15,8 +16,6 @@ end
 inject_into_file "Gemfile", after: 'gem "debug", platforms: %i[ mri mingw x64_mingw ]' do
   "\n  gem \"dotenv-rails\""
 end
-
-gsub_file("Gemfile", '# gem "sassc-rails"', 'gem "sassc-rails"')
 
 # Assets
 ########################################
