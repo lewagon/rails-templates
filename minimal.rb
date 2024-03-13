@@ -54,6 +54,14 @@ RUBY
 
 environment generators
 
+# General Config
+########################################
+general_config = <<~RUBY
+config.action_controller.raise_on_missing_callback_actions = false
+RUBY
+
+environment general_config
+
 ########################################
 # After bundle
 ########################################
