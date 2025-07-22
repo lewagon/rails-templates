@@ -17,6 +17,10 @@ inject_into_file "Gemfile", after: "group :development, :test do" do
   "\n  gem \"dotenv-rails\""
 end
 
+inject_into_file "Gemfile", after: "group :development do" do
+  "\n  gem \"hotwire-livereload\""
+end
+
 # Assets
 ########################################
 run "rm -rf app/assets/stylesheets"
@@ -119,6 +123,10 @@ after_bundle do
   # Rubocop
   ########################################
   run "curl -L https://raw.githubusercontent.com/lewagon/rails-templates/master/.rubocop.yml > .rubocop.yml"
+
+  # Live refresh
+  ########################################
+  run "rails livereload:install"
 
   # Git
   ########################################
